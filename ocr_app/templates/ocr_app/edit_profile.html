@@ -1,0 +1,19 @@
+{% extends 'ocr_app/base.html' %}
+
+{% load static %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+    <h2>Edit Profile</h2>
+
+    <form method="post" enctype="multipart/form-data" class="bodyform">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class='btn'>Save</button>
+    </form>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+{% endblock %}

@@ -1,0 +1,685 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    cursor: default;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header h1 {
+    font-size: 30px;
+    color: #ff0000;
+    font-family: 'Work Sans';
+}
+
+
+header {
+    position: fixed;
+    background-color: white;
+    top: 0px;
+    width: 100%;
+    color: white;
+    padding: 1em;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid black;
+    justify-content: space-around;
+}
+
+header nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+header nav a {
+    color: black;
+    border-radius: 5px;
+    text-decoration: none;
+    padding: 9px 20px;
+}
+
+header nav a:hover {
+    background-color: rgb(220, 41, 41);
+}
+
+header nav li {
+    list-style: none;
+}
+
+
+.btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    margin: 0 15px;
+    border-radius: 2px;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+    color: black;
+}
+
+header nav .btn i {
+    font-size: 18px;
+}
+
+header nav .btn .fa-moon {
+    display: none;
+}
+
+header nav .btn .fa-sun {
+    display: block;
+}
+
+header nav li a i {
+    padding-right: 5px;
+}
+
+.theme {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menubar {
+    border: none;
+    background: transparent;
+    display: none;
+}
+
+.content {
+    padding: 20px;
+    text-align: center;
+    margin: 64px 0 100px 0;
+}
+
+.content ul li {
+    text-align: left;
+    list-style: none;
+}
+
+.profile-button {
+    border-radius: 50%;
+    overflow: hidden;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #ccc;
+}
+
+.profile-button img {
+    height: 40px;
+    width: 40px;
+    object-fit: cover;
+}
+
+.profile-button:hover {
+    border-color: #007bff;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1em 0;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+.bodyform {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 2em;
+    background: #6f6f6f;
+    border-radius: 5px;
+}
+
+.bodyform input {
+    margin-bottom: 1em;
+    padding: 0.5em;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.bodyform input[type="file"] {
+    border: 2px solid wheat;
+}
+
+.bodyform textarea {
+    padding: 0.3em;
+    resize: vertical;
+}
+
+.bodyform button {
+    margin: 0 0 0 15px;
+}
+
+.bookform {
+    max-width: 90vw;
+    width: 90vw;
+}
+
+.bookform textarea {
+    width: 100%;
+    aspect-ratio: 1 / 1.41428571;
+    resize: none;
+}
+
+.bodyform p {
+    display: flex;
+    flex-direction: column;
+}
+
+.contentform {
+    max-width: 95%;
+}
+
+.contentform textarea {
+    height: 45vh;
+}
+
+.contentform .btn {
+    margin-top: 15px;
+}
+
+.book {
+    text-align: center;
+    /* border: 1px solid #373030; */
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: #f5f4fd;
+}
+
+.book h3 {
+    margin-top: 0;
+}
+
+.book-list-grid {
+    display: grid;
+    grid-template-columns: 18.8% 18.8% 18.8% 18.8% 18.8%;
+    gap: 1em;
+}
+
+.book-level {
+    font-size: large;
+    font-weight: 700;
+}
+
+.book-select {
+    border: none;
+    background-color: lightblue;
+    height: 30px;
+    margin-bottom: 10px;
+}
+
+.book-home {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.book-home:hover {
+    background-color: #adb0ff;
+}
+
+.book-home a {
+    color: black;
+}
+
+.book-cover-container {
+    cursor: pointer;
+}
+
+.book-cover-container img {
+    width: 80%;
+    aspect-ratio: 1 / 1.414;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.book-cover-container i {
+    font-size: 7vw;
+    cursor: pointer;
+}
+
+.book-cover-container .cover-not-found {
+    color: red;
+    cursor: pointer;
+}
+
+.book-home-data {
+    text-align: left;
+    padding-top: 20px;
+    cursor: pointer;
+}
+
+.book-home-data h3,
+.book-home-data p {
+    cursor: pointer;
+}
+
+.book .btn {
+    background-color: #007bff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 3px;
+    margin: 3px 0;
+}
+
+.book button a {
+    text-decoration: none;
+    color: white;
+}
+
+
+nav a img {
+    height: 40px;
+    width: 40px;
+    object-fit: cover;
+}
+
+.btn-logout-button {
+    background-color: red;
+    color: white;
+}
+
+.btn-logout-button:hover {
+    background-color: rgb(255, 75, 75);
+    color: black;
+}
+
+.btn-edit-profile {
+    background-color: orange;
+}
+
+.btn-edit-profile:hover {
+    background-color: rgb(255, 187, 61);
+}
+
+.display-profile {
+    position: fixed;
+    top: 90px;
+    float: left;
+    width: 34%;
+    height: 75vh;
+    border: 2px solid white;
+    text-align: center;
+    background: #6f6f6f;
+    border-radius: 10px;
+}
+
+.display-profile h1 {
+    color: #101010;
+    padding: 10px 0;
+}
+
+.display-profile p {
+    margin: 3px auto;
+    padding: 3px 0;
+    width: 90%;
+    border: 1px solid rgb(200, 200, 200);
+}
+
+.display-dashboard {
+    float: right;
+    width: 63.3%;
+    margin: 20px 0 60px 0;
+    padding: 0 7px;
+    border-left: 1px solid;
+    border-right: 1px solid;
+}
+
+.display-dashboard h1 {
+    color: #101010;
+}
+
+.btn-createnew {
+    background-color: green;
+    margin: 10px 0;
+    width: 100%;
+}
+
+.btn-createnew:hover {
+    background-color: rgb(0, 255, 0);
+}
+
+.display-dashboard ul {
+    list-style: none;
+}
+
+.profile-image {
+    height: 100px;
+}
+
+
+.btn-profile-action {
+    margin: 10px 0;
+    width: 44.5%;
+}
+
+.content form .django-ckeditor-widget {
+    width: 100%;
+}
+
+.view-book {
+    margin: 0 10px;
+}
+
+#scroll-button {
+    padding: 10px 100px;
+}
+
+.chapter {
+    text-align: center;
+    margin-bottom: 15px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin: 16px 0;
+    border: 2px solid lightgray;
+    padding: 10px;
+}
+
+.view-side-bar {
+    position: fixed;
+    top: 72px;
+    width: 35%;
+    left: 0px;
+    height: 100vh;
+    padding: 15px;
+}
+
+.view-book-bar {
+    float: right;
+    width: 65%;
+    margin-bottom: 50px;
+}
+
+.content .occurrence {
+    background-color: #d7f5ff;
+    color: #0000ff;
+    font-weight: 600;
+    padding: 10px;
+    margin: 3px;
+    border-radius: 5px;
+}
+
+.chapter>span,
+.chapter>.chapter-container>span {
+    font-size: 20px;
+    font-weight: bolder;
+    color: #333;
+    text-decoration: underline;
+}
+
+.chapter-container .text {
+    max-width: 70%;
+}
+
+.chapter-container .button {
+    max-width: 40%;
+}
+
+.chapter h1 {
+    font-size: 18px;
+    margin-left: 30px;
+}
+
+.chapter h2 {
+    font-size: 17px;
+    margin-left: 45px;
+}
+
+.chapter h3 {
+    font-size: 16px;
+    margin-left: 60px;
+}
+
+.chapter h4 {
+    font-size: 15px;
+    margin-left: 45px;
+}
+
+.chapter p {
+    font-size: 14px;
+    margin: 5px 0
+}
+
+.chapter .btn {
+    padding: 5px;
+    margin: 2px;
+}
+
+.chapter .btn-blue {
+    background-color: #3d3dff;
+}
+
+.chapter .btn-green {
+    background-color: green;
+}
+
+.chapter .btn-red {
+    background-color: red;
+}
+
+.text-content {
+    font-size: 16px;
+    padding: 2px 0;
+    font-style: italic;
+    font-weight: normal;
+}
+
+.heading {
+    padding: 6px 0;
+}
+
+/* .heading1 .view-content {
+    margin-left: 45px;
+} */
+
+.heading1 .text-content {
+    margin-left: 45px;
+}
+
+.heading2 .text-content {
+    margin-left: 65px;
+}
+
+.heading3 .text-content {
+    margin-left: 85px;
+}
+
+.heading4 .text-content {
+    margin-left: 105px;
+}
+
+.search-form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 5px;
+    margin: 20px 0 10px 0;
+}
+
+.search-form .search-input {
+    margin: 0px;
+    padding: 8px;
+}
+
+.text-behind-search {
+    display: block;
+    float: left;
+}
+
+.search-book {
+    display: block;
+    float: right;
+}
+
+.search-book input {
+    padding: 8px;
+}
+
+.search-book .btn i {
+    margin-right: 5px;
+}
+
+.ruler {
+    width: 100%;
+    visibility: hidden;
+    margin: 13px 0;
+}
+
+.drop-down {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: lightgrey;
+    border-radius: 10px;
+    flex-direction: column;
+    top: 72px;
+}
+
+.drop-down-name {
+    text-align: right;
+}
+
+.drop-down-name p {
+    margin: 5px;
+}
+
+.drop-down-input {
+    display: flex;
+    flex-direction: column;
+}
+
+.drop-down-input select {
+    margin: 3px;
+    border: none;
+    width: 135px;
+}
+
+.download-btn {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.download-btn i {
+    margin-right: 5px;
+}
+
+#move-to-top {
+    position: fixed;
+    right: 30px;
+    bottom: 65px;
+    font-size: 20px;
+    height: 50px;
+    width: 50px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#move-to-top:hover {
+    color: #333;
+    font-size: 22px;
+    border: 2px solid black;
+}
+
+#move-to-bottom {
+    position: fixed;
+    right: 30px;
+    bottom: 65px;
+    font-size: 20px;
+    height: 50px;
+    width: 50px;
+    z-index: 99;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#move-to-bottom:hover {
+    color: #333;
+    font-size: 22px;
+    border: 2px solid black;
+}
+
+#goto-chapter-btn {
+    position: fixed;
+    right: 95px;
+    bottom: 65px;
+    height: 50px;
+    width: 150px;
+    z-index: 99;
+    border: none;
+    background-color: #555;
+    color: white;
+    padding: 15px;
+    border-radius: 40px;
+    cursor: pointer;
+}
+
+#goto-chapter-btn:hover {
+    background-color: #333;
+}
+
+#dropdown-container {
+    display: none;
+    position: fixed;
+    bottom: 80px;
+    right: 30px;
+    bottom: 125px;
+    color: black;
+    z-index: 100;
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown select {
+    width: 50%;
+}
+
+.dropdown {
+    margin-bottom: 10px;
+}
+
+.chapter-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f5f4fd;
+}
+
+@media (max-width: 938px) {
+    header nav a {
+        padding: 9px 12px;
+    }
+
+    header nav .btn {
+        margin: 0 10px;
+    }
+}

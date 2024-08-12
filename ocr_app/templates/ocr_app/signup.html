@@ -1,0 +1,11 @@
+{% extends "ocr_app/base.html" %}
+
+{% block title %}signup{% endblock %}
+
+{% block content %}
+  <h2>Sign Up</h2>
+  <form class="bodyform" method="post">
+    {% csrf_token %} {{form.as_p}}
+    <button type="submit" class="btn">Sign Up</button>
+  </form>
+{% endblock %}

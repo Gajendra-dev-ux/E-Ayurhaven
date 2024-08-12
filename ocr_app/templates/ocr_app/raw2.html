@@ -1,0 +1,357 @@
+{% extends 'ocr_app/base.html' %}
+
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block extra_head %}
+{% load static %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+
+        // Dropdown elements
+        const chapterDropdown = document.getElementById('chapter-dropdown');
+        const heading1Dropdown = document.getElementById('heading1-dropdown');
+        const heading2Dropdown = document.getElementById('heading2-dropdown');
+        const heading3Dropdown = document.getElementById('heading3-dropdown');
+        const heading4Dropdown = document.getElementById('heading4-dropdown');
+        const scrollButton = document.getElementById('scroll-button');
+
+        // Event listeners for dropdown changes
+        chapterDropdown.addEventListener('change', function () {
+            const chapterId = this.value.replace('chapter-', '');
+            updateDropdown(heading1Dropdown, chapterId, 1);
+        });
+
+        heading1Dropdown.addEventListener('change', function () {
+            const heading1Id = this.value.replace('heading1-', '');
+            updateDropdown(heading2Dropdown, heading1Id, 2);
+        });
+
+        heading2Dropdown.addEventListener('change', function () {
+            const heading2Id = this.value.replace('heading2-', '');
+            updateDropdown(heading3Dropdown, heading2Id, 3);
+        });
+
+        heading3Dropdown.addEventListener('change', function () {
+            const heading3Id = this.value.replace('heading3-', '');
+            updateDropdown(heading4Dropdown, heading3Id, 4);
+        });
+
+        scrollButton.addEventListener('click', function () {
+            const targetId = heading4Dropdown.value || heading3Dropdown.value || heading2Dropdown.value || heading1Dropdown.value || chapterDropdown.value;
+            scrollToElement(targetId);
+        });
+
+        // Function to update dropdown options
+        function updateDropdown(dropdown, parentId, level) {
+            fetch(`/api/headings/?parent_id=${parentId}&level=${level}`)
+                .then(response => response.json())
+                .then(data => {
+                    dropdown.innerHTML = '<option value="">Select...</option>';
+                    data.forEach(item => {
+                        const option = document.createElement('option');
+                        option.value = `heading${level}-${item.id}`;
+                        option.textContent = item.name;
+                        dropdown.appendChild(option);
+                    });
+                });
+        }
+
+        // Function to scroll to an element on the page
+        function scrollToElement(id) {
+            if (id) {
+                const element = document.getElementById(id);
+                if (element) {
+                    const offset = 74; // Adjust as needed
+                    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                    const offsetPosition = elementPosition - offset;
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        }
+
+        // Function to handle inline editing
+        function enableInlineEditing() {
+            const editableElements = document.querySelectorAll('[contenteditable]');
+
+            editableElements.forEach(element => {
+                element.addEventListener('blur', (event) => {
+                    const target = event.target;
+                    const id = target.getAttribute('data-id');
+                    const type = target.getAttribute('data-type');
+                    const value = target.innerHTML;  // Get HTML content for CKEditor
+
+                    if (id && type) {
+                        updateServer(type, id, value);
+                    }
+                });
+            });
+        }
+
+        function updateServer(type, id, value) {
+            fetch(`/api/update_${type}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: JSON.stringify({ id: id, value: value })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    alert('Failed to update');
+                }
+            });
+        }
+        
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        enableInlineEditing();
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="flex">
+    <h1>Write Book : {{ book.title }}</h1>
+    <!-- <p><strong>Author:</strong> {{ book.author }}</p> -->
+    <a href="{% url 'add_chapter' book.id %}">
+        <button class="btn"><i class="fa-solid fa-circle-plus"></i> Add Chapter</button>
+    </a>
+</div>
+<hr>
+<p>(click on text for Edit)</p>
+    <!-- Navigation using Dropdown -->
+    <ul>
+        
+        <!-- Loading the content in the write_book Page -->
+        {% for chapter_heading in chapters_with_headings %}
+            <li id="chapter-{{ chapter_heading.chapter.id }}" class="chapter" data-name="{{ chapter_heading.chapter.name }}">
+                <div class="chapter-container">
+                    <span contenteditable="true" data-id="{{ chapter_heading.chapter.id }}" data-type="chapter">{{ chapter_heading.chapter.name|safe }}</span>
+                    <div class="buttons">
+                        <a href="{% url 'add_heading' chapter_heading.chapter.id %}">
+                            <button class="btn btn-green">Add Heading</button>
+                        </a>
+                        <a href="{% url 'delete_chapter' chapter_heading.chapter.id %}">
+                            <button class="btn btn-red">Delete Chapter</button>
+                        </a>
+                    </div>
+                </div>
+                <ul>
+                    <!-- Heading 1 -->
+                    {% for heading1 in chapter_heading.heading1 %}
+                        <li id="heading1-{{ heading1.id }}" class="heading heading1" data-parent="chapter-{{ chapter_heading.chapter.id }}" data-name="{{ heading1.name }}">
+                            <h1>
+                                <div class="chapter-container">
+                                    <span contenteditable="true" data-id="{{ heading1.id }}" data-type="heading">{{ heading1.name|safe }}</span>
+                                    <div class="buttons">
+                                        <a href="{% url 'add_content' heading1.id %}">
+                                            <button class="btn btn-green">Add Content</button>
+                                        </a>
+                                        <a href="{% url 'delete_heading' heading1.id %}">
+                                            <button class="btn btn-red">Delete Heading</button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </h1>
+                            <ul>
+                                <!-- Content under Heading 1 -->
+                                {% for content in heading1.contents.all %}
+                                    <li class="text-content">
+                                        <div class="chapter-container">
+                                            <div class="text" contenteditable="true" data-id="{{ content.id }}" data-type="content">
+                                                <p>{{ content.text|safe }}</p>
+                                            </div>
+                                            <div class="buttons">
+                                                <a href="{% url 'delete_content' content.id %}">
+                                                    <button class="btn btn-red">Delete Content</button>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                                <!-- Heading 2 -->
+                                {% for heading2 in chapter_heading.heading2 %}
+                                    {% if heading2.parent.id == heading1.id %}
+                                        <li id="heading2-{{ heading2.id }}" class="heading heading2" data-parent="heading1-{{ heading1.id }}" data-name="{{ heading2.name }}">
+                                            <h2>
+                                                <div class="chapter-container">
+                                                    <span contenteditable="true" data-id="{{ heading2.id }}" data-type="heading">{{ heading2.name|safe }}</span>
+                                                    <div class="buttons">
+                                                        <a href="{% url 'add_content' heading2.id %}">
+                                                            <button class="btn btn-green">Add Content</button>
+                                                        </a>
+                                                        <a href="{% url 'delete_heading' heading2.id %}">
+                                                            <button class="btn btn-red">Delete Heading</button>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </h2>
+                                            <ul>
+                                                <!-- Content under Heading 2 -->
+                                                {% for content in heading2.contents.all %}
+                                                    <li class="text-content">
+                                                        <div class="chapter-container">
+                                                            <div class="text" contenteditable="true" data-id="{{ content.id }}" data-type="content">
+                                                                <p>{{ content.text|safe }}</p>
+                                                            </div>
+                                                            <div class="buttons">
+                                                                <a href="{% url 'delete_content' content.id %}">
+                                                                    <button class="btn btn-red">Delete Content</button>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                {% endfor %}
+                                                <!-- Heading 3 -->
+                                                {% for heading3 in chapter_heading.heading3 %}
+                                                    {% if heading3.parent.id == heading2.id %}
+                                                        <li id="heading3-{{ heading3.id }}" class="heading heading3" data-parent="heading2-{{ heading2.id }}" data-name="{{ heading3.name }}">
+                                                            <h3>
+                                                                <div class="chapter-container">
+                                                                    <span contenteditable="true" data-id="{{ heading3.id }}" data-type="heading">{{ heading3.name|safe }}</span>
+                                                                    <div class="buttons">
+                                                                        <a href="{% url 'add_content' heading3.id %}">
+                                                                            <button class="btn btn-green">Add Content</button>
+                                                                        </a>
+                                                                        <a href="{% url 'delete_heading' heading3.id %}">
+                                                                            <button class="btn btn-red">Delete Heading</button>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </h3>
+                                                            <ul>
+                                                                <!-- Content under Heading 3 -->
+                                                                {% for content in heading3.contents.all %}
+                                                                    <li class="text-content">
+                                                                        <div class="chapter-container">
+                                                                            <div class="text" contenteditable="true" data-id="{{ content.id }}" data-type="content">
+                                                                                <p>{{ content.text|safe }}</p>
+                                                                            </div>
+                                                                            <div class="buttons">
+                                                                                <a href="{% url 'delete_content' content.id %}">
+                                                                                    <button class="btn btn-red">Delete Content</button>
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                {% endfor %}
+                                                                <!-- Heading 4 -->
+                                                                {% for heading4 in chapter_heading.heading4 %}
+                                                                    {% if heading4.parent.id == heading3.id %}
+                                                                        <li id="heading4-{{ heading4.id }}" class="heading heading4" data-parent="heading3-{{ heading3.id }}" data-name="{{ heading4.name }}">
+                                                                            <h4>
+                                                                                <div class="chapter-container">
+                                                                                    <span contenteditable="true" data-id="{{ heading4.id }}" data-type="heading">{{ heading4.name|safe }}</span>
+                                                                                    <div class="buttons">
+                                                                                        <a href="{% url 'add_content' heading4.id %}">
+                                                                                            <button class="btn btn-green">Add Content</button>
+                                                                                        </a>
+                                                                                        <a href="{% url 'delete_heading' heading4.id %}">
+                                                                                            <button class="btn btn-red">Delete Heading</button>
+                                                                                        </a>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </h4>
+                                                                            <ul>
+                                                                                <!-- Content under Heading 4 -->
+                                                                                {% for content in heading4.contents.all %}
+                                                                                    <li class="text-content">
+                                                                                        <div class="chapter-container">
+                                                                                            <div class="text" contenteditable="true" data-id="{{ content.id }}" data-type="content">
+                                                                                                <p>{{ content.text|safe }}</p>
+                                                                                            </div>
+                                                                                            <div class="buttons">
+                                                                                                <a href="{% url 'delete_content' content.id %}">
+                                                                                                    <button class="btn btn-red">Delete Content</button>
+                                                                                                </a>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </li>
+                                                                                {% endfor %}
+                                                                            </ul>
+                                                                        </li>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+    <button id="goto-chapter-btn">Navigate Page</button>
+
+    <div class="drop-down" id="dropdown-container">
+        <div class="drop-down-input">
+            <!-- Chapter dropdown -->
+            <select id="chapter-dropdown">
+                <option value="">Select Chapter</option>
+                {% for chapter_heading in chapters_with_headings %}
+                    <option value="chapter-{{ chapter_heading.chapter.id }}">{{ chapter_heading.chapter.name }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- Heading 1 dropdown -->
+            <select id="heading1-dropdown">
+                <option value="">Select Heading 1</option>
+            </select>
+
+            <!-- Heading 2 dropdown -->
+            <select id="heading2-dropdown">
+                <option value="">Select Heading 2</option>
+            </select>
+
+            <!-- Heading 3 dropdown -->
+            <select id="heading3-dropdown">
+                <option value="">Select Heading 3</option>
+            </select>
+
+            <!-- Heading 4 dropdown -->
+            <select id="heading4-dropdown">
+                <option value="">Select Heading 4</option>
+            </select>
+        </div>
+        <button id="scroll-button" class="btn">Go</button>
+    </div>
+    
+    <script>
+        // Toggle visibility of dropdown container
+        const gotoChapterBtn = document.getElementById('goto-chapter-btn');
+        const dropdownContainer = document.getElementById('dropdown-container');
+
+        gotoChapterBtn.addEventListener('click', () => {
+            const isDropdownVisible = dropdownContainer.style.display === 'block';
+            dropdownContainer.style.display = isDropdownVisible ? 'none' : 'block';
+            gotoChapterBtn.textContent = isDropdownVisible ? 'Navigate Page' : 'Quit Navigation';
+        });
+
+    </script>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'ocr_app/base.html' %}
+
+{% block title %}Confirm Delete{% endblock %}
+
+{% block content %}
+    <h1>Confirm Delete</h1>
+    <p>Are you sure you want to delete the book "{{ book.title }}"?</p>
+    <form class="bodyform" action="{% url 'delete_book' book.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn">Yes, delete</button>
+        <a href="{% url 'profile' %}">
+            <button type="button" class="btn">
+                Cancel
+            </button>
+        </a>
+    </form>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'ocr_app/base.html' %}
+
+{% block title %}Delete Content{% endblock %}
+
+{% block content %}
+    <h2>Delete Content for {{ heading.name }}</h2>
+    <p>Are you sure you want to delete the content: "{{ content.text|striptags|truncatewords:10 }}"?</p>
+    <form class="bodyform" action="{% url 'delete_content' content.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn">Yes, Delete</button>
+        <a href="{% url 'write_book' content.heading.chapter.book.id %}">
+            <button type="button" class="btn">
+                Cancel
+            </button>
+        </a>
+    </form>
+{% endblock %}

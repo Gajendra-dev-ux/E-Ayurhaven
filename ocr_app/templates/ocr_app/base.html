@@ -1,0 +1,165 @@
+{% load custom_filters %}
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% block title %}OCR Project{% endblock %}</title>
+    {{ form.media }}
+    <style>
+      .highlight{
+        background-color: yellow;
+      }
+
+      body.dark-mode .highlight{
+        color: black;
+        background-color: yellow;
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'ocr_app/css/styles.css' %}"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'ocr_app/css/dark_mode.css' %}"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kalnia+Glaze:wght@100..700&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="{% static 'ckeditor/ckeditor/styles.css' %}"> -->
+    <script>
+      function toggleDarkMode() {
+        var body = document.body;
+        body.classList.toggle("dark-mode");
+
+        // Save the current theme in localStorage
+        if (body.classList.contains("dark-mode")) {
+          localStorage.setItem("theme", "dark");
+        } else {
+          localStorage.setItem("theme", "light");
+        }
+      }
+
+      // Load the saved theme from localStorage
+      window.onload = function () {
+        var theme = localStorage.getItem("theme");
+        if (theme === "dark") {
+          document.body.classList.add("dark-mode");
+        }
+      };
+    </script>
+    {% block extra_head %}
+    {% endblock %}
+  </head>
+  <body>
+    <header>
+      <h1><i class="fa-solid fa-book-open-reader"></i>Digital Library</h1>
+      <form class="search-book" method="get" action="{% url 'home' %}">
+        <input type="text" name="content_q" placeholder="Search..." value="{{ request.GET.content_q }}">
+        <button class="toggle-btn btn-icn" id="toggleBtn" onclick="toggleBox()" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+      </form>
+      <nav>
+        <li class="headings"><a href="{% url 'home' %}"><i class="fa-solid fa-house-user"></i>Home</a></li>
+        {% if user.is_authenticated %}
+        <li class="headings"><a href="{% url 'add_book' %}"><i class="fa-solid fa-circle-plus"></i>Book</a></li>
+        {% else %}
+        <li class="headings"><a href="{% url 'login' %}"><i class="fa-solid fa-arrow-right-to-bracket"></i>Login</a></li>
+        <li class="headings"><a href="{% url 'signup' %}"><i class="fa-solid fa-user-plus"></i>Signup</a></li>
+        {% endif %}
+        <button onclick="toggleDarkMode()" class="theme btn">
+          <i class="fa-regular fa-sun"></i>
+          <i class="fa-regular fa-moon"></i>
+        </button>
+        {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}" class="profile-button">
+          {% if user.profile.profile_image %}
+            <img src="{{ user.profile.profile_image.url }}" alt="Profile Image">
+          {% else %}
+            <i class="fa-regular fa-user"></i>
+          {% endif %}
+        </a>
+        {% endif %}
+      </nav>
+      
+    </header>
+    <div class="content">
+      {% block content %}
+      {% endblock %}
+    </div>
+
+    <div class="button-container-bottom-right">
+      <button id="move-to-top"><i class="fa-solid fa-arrow-up"></i></button>
+      <button id="move-to-bottom"><i class="fa-solid fa-arrow-down"></i></button>
+    </div>
+
+    <footer>
+      <!-- <div class="footer__redes">
+        <ul class="footer__redes-wrapper">
+          <li>
+            <a href="#" class="footer__link">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="footer__link">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="footer__link">
+              <i class="fab fa-instagram"></i>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="footer__link">
+              <i class="fab fa-youtube"></i>
+            </a>
+          </li>
+        </ul>
+      </div> -->
+      <p>&copy; 2024 High Court of Madhya Pradesh. All rights reserved.</p>
+    </footer>
+    
+    
+    <!-- JavaScript -->
+    <script>
+      // Clear the logged_out flag when the user visits any page
+      sessionStorage.setItem('logged_out', 'false');
+
+      // Scroll to Top/Bottom Button
+      const scrollToTopBtn = document.getElementById("move-to-top");
+      const scrollToBottomBtn = document.getElementById("move-to-bottom");
+      scrollToTopBtn.style.display = "none";
+      scrollToBottomBtn.style.display = "none";
+      window.onscroll = function() {
+        
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+          scrollToTopBtn.style.display = "block";
+          scrollToBottomBtn.style.display = "none";
+        } 
+        
+        else {
+          scrollToTopBtn.style.display = "none";
+          scrollToBottomBtn.style.display = "block";
+        }
+      };
+      
+      scrollToTopBtn.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      scrollToBottomBtn.addEventListener('click', function () {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        });
+
+      
+    </script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+  </body>
+</html>

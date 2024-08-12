@@ -1,0 +1,17 @@
+{% extends 'ocr_app/base.html' %}
+
+{% block title %}Delete Heading{% endblock %}
+
+{% block content %}
+    <h2>Delete Heading {{ heading.name }}</h2>
+    <p>Are you sure you want to delete the heading <b>{{ heading.name }}</b> from <b>{{ heading.chapter.name}}</b>?</p>
+    <form class="bodyform" action="{% url 'delete_heading' heading.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn">Yes, Delete</button>
+        <a href="{% url 'write_book' heading.chapter.book.id %}">
+            <button type="button" class="btn">
+                Cancel
+            </button>
+        </a>
+    </form>
+{% endblock %}

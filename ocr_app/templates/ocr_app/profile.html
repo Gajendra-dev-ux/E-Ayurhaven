@@ -1,0 +1,109 @@
+{% extends 'ocr_app/base.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+
+
+<div class="display-profile">
+    <h1 class="headings">Profile</h1>
+    {% if profile.profile_image %}
+        <img src="{{ profile.profile_image.url }}" alt="Profile Image" class="profile-image">
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ profile.email }}</p>
+        <p><strong>Mobile:</strong> {{ profile.contact_number }}</p>
+    {% else %}
+        <p>No profile image available.</p>
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ profile.email }}</p>
+        <p><strong>Mobile:</strong> {{ profile.contact_number }}</p>
+    {% endif %}
+
+    <form action="{% url 'logout' %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button class="btn btn-profile-action btn-logout-button" type="submit">Logout</button>
+    </form>
+
+    <a href="{% url 'edit_profile' %}"><button class="btn btn-profile-action btn-edit-profile">Edit Profile</button></a>
+</div>
+
+<div class="display-dashboard">
+    <h1 class="text-behind-search headings">Your Acts/Rules</h1>
+    <form class="search-book" method="get" action="{% url 'profile' %}">
+        <input type="text" name="q" placeholder="Search by title...">
+        <button class="btn btn-icn" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+    </form>
+    <a href="{% url 'add_book' %}"><button class="btn btn-createnew">Add New Act/Rule</button></a>
+    <div>
+        <ul>
+            {% for book in books %}
+            <li>
+                <div class="book book-home-profile">
+                    <a href="{% url 'view_book' book.id %}">
+                        <h3>{{ book.title }}</h3>
+                    </a> 
+                    <!-- <i class="fa-solid fa-arrow-trend-down three_dot" title="View More" data-book-id="{{ book.id }}"></i> -->
+                    <i class="fa-solid fa-circle-arrow-right three_dot" title="View More" data-book-id="{{ book.id }}"></i>
+                </div>
+                <div class="three_dot_content" id="three_dot_content_{{ book.id }}" style="display: none;">
+                    <a class="button-62" href="{% url 'write_book' book.id %}">
+                        Write
+                    </a>
+                    <a class="button-62" href="{% url 'view_book' book.id %}">
+                        View
+                    </a>
+                    
+
+                    <a class="button-62" href="{% url 'delete_book' book.id %}">
+                        Delete
+                    </a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<script>
+    // Toggle visibility of threeDotContent for each book
+    const threeDots = document.querySelectorAll('.three_dot');
+    let openDropdown = null;
+
+    threeDots.forEach(threeDot => {
+        const bookId = threeDot.getAttribute('data-book-id');
+        const threeDotContent = document.getElementById(`three_dot_content_${bookId}`);
+
+        threeDot.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (openDropdown && openDropdown !== threeDotContent) {
+                openDropdown.style.display = 'none';
+            }
+            const isDropdownVisible = threeDotContent.style.display === 'block';
+            if (!isDropdownVisible) {
+                const rect = threeDot.getBoundingClientRect();
+                threeDotContent.style.top = `${rect.bottom + window.scrollY}px`; 
+                threeDotContent.style.left = `${rect.left + window.scrollX}px`; 
+            }
+            threeDotContent.style.display = isDropdownVisible ? 'none' : 'block';
+            openDropdown = isDropdownVisible ? null : threeDotContent;
+        });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', () => {
+        if (openDropdown) {
+            openDropdown.style.display = 'none';
+            openDropdown = null;
+        }
+    });
+
+
+    // Check if the user was logged out and tries to access this page
+    if (sessionStorage.getItem('logged_out') === 'true') {
+        alert('Please log in first.');
+        window.location.href = "{% url 'login' %}";
+    } else {
+        // Clear the flag
+        sessionStorage.setItem('logged_out', 'false');
+    }
+</script>
+{% endblock %}

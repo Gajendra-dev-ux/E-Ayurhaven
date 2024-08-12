@@ -1,0 +1,39 @@
+{% extends 'ocr_app/base.html' %}
+
+{% block title %}Add Content{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.tiny.cloud/1/myg0i9gc5gctzgsnz62gz2mp0b1q1jl3z88kxwmx16eg0asx/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+{% endblock %}
+
+{% block content %}
+    <h2 class="headings">Add Content to {{ heading.name }}</h2>
+    <form method="post" class="bodyform contentform">
+      {% csrf_token %}
+      <textarea name="text" cols="40" rows="10" class="tinymce" required id="id_text"></textarea>
+      <button type="submit" class="btn">Add Content</button>
+    </form>
+    <script>
+      tinymce.init({
+        selector: 'textarea',
+        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed linkchecker a11ychecker tinymcespellchecker permanentpen powerpaste advtable advcode editimage advtemplate ai mentions tinycomments tableofcontents footnotes mergetags autocorrect typography inlinecss markdown',
+        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat |superscript',
+        tinycomments_mode: 'embedded',
+        tinycomments_author: 'Author name',
+        mergetags_list: [
+          { value: 'First.Name', title: 'First Name' },
+          { value: 'Email', title: 'Email' },
+        ],
+        ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
+        apiKey: 'myg0i9gc5gctzgsnz62gz2mp0b1q1jl3z88kxwmx16eg0asx',  // Add your API key here
+        paste_as_text: false,
+        // Ensure the editor value is updated in the hidden textarea
+        setup: function (editor) {
+            editor.on('change', function () {
+                editor.save();  // Save the editor content to the textarea
+            });
+        }
+      });
+    </script>
+{% endblock %}
+

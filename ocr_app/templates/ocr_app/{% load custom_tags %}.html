@@ -1,0 +1,26 @@
+{% load custom_tags %}
+
+{% if content_query %}
+    <h2>Results for "{{ content_query }}"</h2>
+    {% if not content_results %}
+        <p>No results found.</p>
+    {% else %}
+        <ul>
+            {% for result in content_results %}
+                {% check_and_set_last_title result.heading.chapter.book.title as should_display_title %}
+                {% if should_display_title %}
+                    <li>
+                        <a href="{% url 'view_book' result.heading.chapter.book.id %}" target="_blank">
+                            {{ result.heading.chapter.book.title }}
+                        </a>
+                    </li>
+                {% endif %}
+                <li>
+                    <p>{{ result.heading.chapter.name }}:</p>
+                    <p>{{ result.heading.name }}</p>
+                </li>
+                <hr class="ul-ruler">
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endif %}

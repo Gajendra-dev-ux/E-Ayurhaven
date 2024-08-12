@@ -1,0 +1,195 @@
+    <!-- Navigation using Dropdown -->
+    <ul>
+        <!-- Loading the content in the write_book Page -->
+        {% for chapter_heading in chapters_with_headings %}
+            <li id="chapter-{{ chapter_heading.chapter.id }}" class="chapter" data-name="{{ chapter_heading.chapter.name }}">
+                <div class="chapter-container">
+                    <span>{{ chapter_heading.chapter.name|safe }}</span>
+                    <div>
+                        <a href="{% url 'add_heading' chapter_heading.chapter.id %}">
+                            <button class="btn btn-green">Add Heading</button>
+                        </a>
+                        <a href="{% url 'edit_chapter' chapter_heading.chapter.id %}">
+                            <button class="btn btn-blue">Edit Chapter</button>
+                        </a>
+                        <a href="{% url 'delete_chapter' chapter_heading.chapter.id %}">
+                            <button class="btn btn-red">Delete Chapter</button>
+                        </a>
+                    </div>
+                </div> 
+                <ul>
+                    <!-- Heading 1 -->
+                    {% for heading1 in chapter_heading.heading1 %}
+                        <li id="heading1-{{ heading1.id }}" class="heading heading1" data-parent="chapter-{{ chapter_heading.chapter.id }}" data-name="{{ heading1.name }}">
+                            <h1>
+                                <div class="chapter-container">
+                                    {{ heading1.name|safe }}
+                                    <div>
+                                        <a href="{% url 'add_content' heading1.id %}">
+                                            <button class="btn btn-green">Add Content</button>
+                                        </a>
+                                        <a href="{% url 'edit_heading' heading1.id %}">
+                                            <button class="btn btn-blue">Edit Heading {{ heading.level }}</button>
+                                        </a>
+                                        <a href="{% url 'delete_heading' heading1.id %}">
+                                            <button class="btn btn-red">Delete Heading</button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </h1>
+                            <ul>
+                                <!-- Content under Heading 1 -->
+                                {% for content in heading1.contents.all %}
+                                    <li class="text-content">
+                                        <div class="chapter-container">
+                                            <div class="text">
+                                                <p>{{ content.text|safe }}</p>
+                                            </div>
+                                            <div class="buttons">
+                                                <a href="{% url 'edit_content' content.id %}">
+                                                    <button class="btn btn-blue">Edit Content</button>
+                                                </a>
+                                                <a href="{% url 'delete_content' content.id %}">
+                                                    <button class="btn btn-red">Delete Content</button>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                                <!-- Heading 2 -->
+                                {% for heading2 in chapter_heading.heading2 %}
+                                    {% if heading2.parent.id == heading1.id %}
+                                        <li id="heading2-{{ heading2.id }}" class="heading heading2" data-parent="heading1-{{ heading1.id }}" data-name="{{ heading2.name }}">
+                                            <h2>
+                                                <div class="chapter-container">
+                                                    {{ heading2.name|safe }}
+                                                    <div>
+                                                        <a href="{% url 'add_content' heading2.id %}">
+                                                            <button class="btn btn-green">Add Content</button>
+                                                        </a>
+                                                        <a href="{% url 'edit_heading' heading2.id %}">
+                                                            <button class="btn btn-blue">Edit Heading {{ heading.level }}</button>
+                                                        </a>
+                                                        <a href="{% url 'delete_heading' heading2.id %}">
+                                                            <button class="btn btn-red">Delete Heading</button>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </h2>
+                                            <ul>
+                                                <!-- Content under Heading 2 -->
+                                                {% for content in heading2.contents.all %}
+                                                    <li class="text-content">
+                                                        <div class="chapter-container">
+                                                            <div class="text">
+                                                                <p>{{ content.text|safe }}</p>
+                                                                
+                                                            </div>
+                                                            <div class="buttons">
+                                                                <a href="{% url 'edit_content' content.id %}">
+                                                                    <button class="btn btn-blue">Edit Content</button>
+                                                                </a>
+                                                                <a href="{% url 'delete_content' content.id %}">
+                                                                    <button class="btn btn-red">Delete Content</button>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                {% endfor %}
+                                                <!-- Heading 3 -->
+                                                {% for heading3 in chapter_heading.heading3 %}
+                                                    {% if heading3.parent.id == heading2.id %}
+                                                        <li id="heading3-{{ heading3.id }}" class="heading heading3" data-parent="heading2-{{ heading2.id }}" data-name="{{ heading3.name }}">
+                                                            <h3>
+                                                                <div class="chapter-container">
+                                                                    {{ heading3.name|safe }}
+                                                                    <div>
+                                                                        <a href="{% url 'add_content' heading3.id %}">
+                                                                            <button class="btn btn-green">Add Content</button>
+                                                                        </a>
+                                                                        <a href="{% url 'edit_heading' heading3.id %}">
+                                                                            <button class="btn btn-blue">Edit Heading {{ heading.level }}</button>
+                                                                        </a>
+                                                                        <a href="{% url 'delete_heading' heading3.id %}">
+                                                                            <button class="btn btn-red">Delete Heading</button>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </h3>
+                                                            <ul>
+                                                                <!-- Content under Heading 3 -->
+                                                                {% for content in heading3.contents.all %}
+                                                                    <li class="text-content">
+                                                                        <div class="chapter-container">
+                                                                            <div class="text">
+                                                                                <p>{{ content.text|safe }}</p>
+                                                                            </div>
+                                                                            <div class="buttons">
+                                                                                <a href="{% url 'edit_content' content.id %}">
+                                                                                    <button class="btn btn-blue">Edit Content</button>
+                                                                                </a>
+                                                                                <a href="{% url 'delete_content' content.id %}">
+                                                                                    <button class="btn btn-red">Delete Content</button>
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                {% endfor %}
+                                                                <!-- Heading 4 -->
+                                                                {% for heading4 in chapter_heading.heading4 %}
+                                                                    {% if heading4.parent.id == heading3.id %}
+                                                                        <li id="heading4-{{ heading4.id }}" class="heading heading4" data-parent="heading3-{{ heading3.id }}" data-name="{{ heading4.name }}">
+                                                                            <h4>
+                                                                                <div class="chapter-container">
+                                                                                    {{ heading4.name|safe }}
+                                                                                    <div>
+                                                                                        <a href="{% url 'add_content' heading4.id %}">
+                                                                                            <button class="btn btn-green">Add Content</button>
+                                                                                        </a>
+                                                                                        <a href="{% url 'edit_heading' heading4.id %}">
+                                                                                            <button class="btn btn-blue">Edit Heading {{ heading.level }}</button>
+                                                                                        </a>
+                                                                                        <a href="{% url 'delete_heading' heading4.id %}">
+                                                                                            <button class="btn btn-red">Delete Heading</button>
+                                                                                        </a>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </h4>
+                                                                            <ul>
+                                                                                <!-- Content under Heading 4 -->
+                                                                                {% for content in heading4.contents.all %}
+                                                                                    <li class="text-content">
+                                                                                        <div class="chapter-container">
+                                                                                            <div class="text">
+                                                                                                <p>{{ content.text|safe }}</p>
+                                                                                            </div>
+                                                                                            <div class="buttons">
+                                                                                                <a href="{% url 'edit_content' content.id %}">
+                                                                                                    <button class="btn btn-blue">Edit Content</button>
+                                                                                                </a>
+                                                                                                <a href="{% url 'delete_content' content.id %}">
+                                                                                                    <button class="btn btn-red">Delete Content</button>
+                                                                                                </a>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </li>
+                                                                                {% endfor %}
+                                                                            </ul>
+                                                                        </li>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>

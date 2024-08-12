@@ -1,0 +1,185 @@
+body.dark-mode {
+    background-color: #121212;
+    color: white;
+}
+
+body.dark-mode *{
+    transition: none;
+}
+
+body.dark-mode header {
+    background-color: #1e1e1e;
+    border-bottom: 1px solid rgb(103, 103, 103);
+}
+body.dark-mode header nav a{
+    color: white;
+}
+
+button body.dark-mode a {
+    color: #bb86fc;
+}
+
+body.dark-mode h1 {
+    color: rgb(234, 234, 234);
+}
+
+body.dark-mode .btn {
+    background-color: #bb86fc;
+    color: #121212;
+}
+
+body.dark-mode .btn:hover {
+    background-color: #3700b3;
+    color: white;
+}
+
+body.dark-mode header nav .btn .fa-sun {
+    display: none;
+}
+
+body.dark-mode header nav .btn .fa-moon {
+    display: block;
+}
+
+header nav .btn i {
+    display: none;
+}
+
+body.dark-mode .book {
+    background-color: #6f6f6f;
+}
+
+body.dark-mode .book .btn {
+    padding: 10px 20px;
+}
+
+body.dark-mode .content .occurrence {
+    color: black;
+}
+
+body.dark-mode .content h1 {
+    color: rgb(222, 222, 222);
+}
+
+body.dark-mode .content p {
+    color: white;
+}
+
+body.dark-mode .chapter-container:hover {
+    background: #6f6f6f;
+}
+
+body.dark-mode .chapter>span,
+body.dark-mode .chapter>.chapter-container>span {
+    color: #c5c5c5;
+}
+
+body.dark-mode .chapter h3 {
+    color: white;
+}
+
+body.dark-mode .chapter .btn-blue {
+    background-color: #3d3dff;
+}
+
+body.dark-mode .chapter .btn-green {
+    background-color: green;
+}
+
+body.dark-mode .chapter .btn-red {
+    background-color: red;
+}
+
+body.dark-mode .chapter .btn {
+    color: white;
+}
+
+body.dark-mode .chapter .btn:hover {
+    color: white;
+}
+
+body.dark-mode .book h3,
+body.dark-mode .book p {
+    color: rgb(237, 237, 237);
+}
+
+body.dark-mode div h2 {
+    color: rgb(210, 210, 210);
+}
+
+body.dark-mode footer {
+    background-color: #1e1e1e;
+}
+
+body.dark-mode .btn-logout-button {
+    background-color: red;
+}
+
+body.dark-mode .btn-logout-button:hover {
+    background-color: rgb(255, 75, 75);
+}
+
+body.dark-mode .btn-edit-profile {
+    background-color: orange;
+}
+
+body.dark-mode .btn-edit-profile:hover {
+    background-color: rgb(255, 187, 61);
+}
+
+body.dark-mode .btn-createnew {
+    background-color: rgb(0, 255, 0);
+}
+
+body.dark-mode .btn-createnew:hover {
+    background-color: green;
+}
+
+body.dark-mode .drop-down {
+    background-color: gray;
+}
+
+body.dark-mode #move-to-top:hover {
+    border: 2px solid white;
+}
+
+body.dark-mode #move-to-bottom:hover {
+    border: 2px solid #9E9E9E;;
+}
+
+
+body.dark-mode .book-home-data {
+    background-color: #6a6a6a;
+}
+body.dark-mode .book-home:hover .book-home-data {
+    background-color: #6a6a6a;
+}
+body.dark-mode .display-profile {
+    background-color: #000000;
+}
+
+body.dark-mode .toggable-box{
+    background-color:  #414141;
+}
+
+body.dark-mode #contentResults a{
+    color:royalblue;
+}
+body.dark-mode .toggable-box ul{
+    background: linear-gradient(45deg, #454b53, transparent);
+}
+
+body.dark-mode .br{
+    color:rgb(255, 194, 194)
+}
+
+body.dark-mode .cr{
+    color: rgb(202 193 255);
+}
+
+body.dark-mode .hr{
+    color: rgb(202 193 255)
+}
+body.dark-mode .match{
+    color: #783eff;
+}

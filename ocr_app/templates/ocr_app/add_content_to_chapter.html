@@ -1,0 +1,12 @@
+{% extends 'ocr_app/base.html' %}
+
+{% block title %}Add Content to {{ chapter.name }}{% endblock %}
+
+{% block content %}
+    <h1>Add Content to {{ chapter.name }}</h1>
+    <form method="post" class="bodyform">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn" type="submit">Add Content</button>
+    </form>
+{% endblock %}
