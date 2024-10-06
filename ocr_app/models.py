@@ -3,15 +3,17 @@ from django.contrib.auth.models import User
 # from ckeditor.fields import RichTextField
 
 
-
 class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=200)
     cover = models.ImageField(upload_to='coverimages/', null=True, blank=True)
     added_by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
-    
+    video = models.FileField(upload_to='videos/', null=True, blank=True)  # Field for video upload
+    model_3d = models.FileField(upload_to='models3d/', null=True, blank=True)  # New field for 3D model upload
+
     def __str__(self):
         return self.title
+
     
 class Chapter(models.Model):
     book = models.ForeignKey(Book, related_name='chapters', on_delete=models.CASCADE)
@@ -57,3 +59,59 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'{self.user.username} Profile'
+    
+class Bookmark(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    bookmarked_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user.username} bookmarked {self.book.title}'
+    
+class Note(models.Model):
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+
+class Quiz(models.Model):
+    LEVEL_CHOICES = [
+        ('easy', 'Easy'),
+        ('moderate', 'Moderate'),
+        ('hard', 'Hard'),
+    ]
+    title = models.CharField(max_length=255)
+    level = models.CharField(max_length=10, choices=LEVEL_CHOICES)
+    description = models.TextField()
+    
+    def __str__(self):
+        return self.title
+
+class Question(models.Model):
+    quiz = models.ForeignKey(Quiz, related_name='questions', on_delete=models.CASCADE)
+    question_text = models.TextField()
+    image = models.ImageField(upload_to='questions/', blank=True, null=True)
+
+    def __str__(self):
+        return self.question_text
+
+class Answer(models.Model):
+    question = models.ForeignKey(Question, related_name='answers', on_delete=models.CASCADE)
+    answer_text = models.CharField(max_length=255)
+    is_correct = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.answer_text
+
+class UserScore(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    score = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.user.username} - {self.quiz.title} - {self.score}"

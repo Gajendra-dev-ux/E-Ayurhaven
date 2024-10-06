@@ -1,0 +1,68 @@
+{% extends 'ocr_app/base.html' %}
+{% block extra_head %}
+<style>
+    /* Main container for the quiz results */
+.quiz-results-container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #f0f8f0;
+    border-radius: 12px;
+    border: 1px solid #c5dec5;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Title of the quiz results */
+.quiz-results-title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #2b7a2b;
+    margin-bottom: 25px;
+}
+
+/* Styling for quiz details */
+.quiz-results-details {
+    padding: 15px;
+    background-color: #e8f4e8;
+    border-radius: 8px;
+    border: 1px solid #c9e3c9;
+    font-size: 20px;
+    color: #3a573a;
+}
+
+/* Individual details styling */
+.quiz-details, .quiz-score {
+    margin: 10px 0;
+    font-size: 22px;
+    font-weight: 600;
+}
+/* Button to go back to the quiz list */
+.btn-back-to-quiz-list {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 25px;
+    background-color: #4caf50;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn-back-to-quiz-list:hover {
+    background-color: #388e3c;
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="quiz-results-container">
+    <h1 class="quiz-results-title">Quiz Results</h1>
+    <div class="quiz-results-details">
+        <p class="quiz-details"><strong>Quiz:</strong> {{ quiz.title }}</p>
+        <p class="quiz-score"><strong>Your Score:</strong> {{ user_score.score }} out of {{ quiz.questions.count }}</p>
+    </div>
+    <a href="{% url 'list_quizzes' %}" class="btn-back-to-quiz-list">Back to Quiz List</a>
+</div>
+{% endblock %}

@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from .forms import BookForm
-from .models import Book
+from .forms import BookForm,NoteForm
+from .models import Book,Note
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login
 from .models import Profile
@@ -11,7 +11,7 @@ from .forms import EditProfileForm
 from django.contrib.auth import logout
 from django.core.files.base import ContentFile
 import base64
-from .models import Book, Chapter, Heading, Content
+from .models import Book, Chapter, Heading, Content, Bookmark
 from .forms import  ChapterForm, HeadingForm, ContentForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -74,6 +74,14 @@ def home(request):
         if book_results:
             results.append(book_results)
 
+    # Check for each book if the user has it bookmarked
+    for book in books:
+        if request.user.is_authenticated:
+            book.is_bookmarked = Bookmark.objects.filter(user=request.user, book=book).exists()
+        else:
+            book.is_bookmarked = False
+
+
     context = {
         'books': books,
         'content_results': content_results,
@@ -93,7 +101,7 @@ def home(request):
 def view_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
     books = Book.objects.all()  # Retrieve all books to populate the dropdown
-    chapters = book.chapters.all()
+    chapters = book.chapters.all()[:1]
     query = request.GET.get('q', '')
 
     occurrences = 0
@@ -347,11 +355,14 @@ def get_headings(request):
 
 @login_required
 def profile(request):
-    query = request.GET.get('q')
-    if query:
-        books = Book.objects.filter(title__icontains=query,added_by=request.user)
-    else:
-        books = Book.objects.filter(added_by=request.user)
+    books = Book.objects.all()
+
+    # query = request.GET.get('q')
+    # if query:
+    #     books = Book.objects.filter(title__icontains=query)
+    # else:
+    #     books = Book.objects.all()
+    bookmarks = Bookmark.objects.filter(user=request.user)
     
     try:
         profile = Profile.objects.get(user=request.user)
@@ -361,7 +372,7 @@ def profile(request):
     # Clear the logged_out flag
     request.session['logged_out'] = False
 
-    return render(request, 'ocr_app/profile.html', {'profile': profile , 'books': books})
+    return render(request, 'ocr_app/profile.html', {'profile': profile , 'bookmarks': bookmarks,'books':books})
 
 def logout_view(request):
     logout(request)
@@ -395,12 +406,7 @@ def edit_profile(request):
 
     return render(request, 'ocr_app/edit_profile.html', {'form': form})
 
-# Book Page Adding and Editing
 
-def book_detail(request, pk):
-    book = get_object_or_404(Book, id=pk)
-    pages = book.pages.all()
-    return render(request, 'ocr_app/view_book.html', {'book': book, 'pages': pages})
 
 @login_required
 def edit_book(request, pk):
@@ -589,3 +595,143 @@ def update_heading(request):
             return JsonResponse({'success': False, 'error': 'Heading not found'})
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
+
+
+@login_required
+def bookmark_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    bookmark, created = Bookmark.objects.get_or_create(user=request.user, book=book)
+    if created:
+        # The bookmark was added
+        message = "Bookmarked successfully!"
+    else:
+        # If the bookmark already exists, remove it
+        bookmark.delete()
+        message = "Bookmark removed!"
+    
+    return redirect('home')  # Redirect to book detail page or any other page
+
+@login_required
+def my_bookmarks(request):
+    bookmarks = Bookmark.objects.filter(user=request.user)
+    return render(request, 'my_bookmarks.html', {'bookmarks': bookmarks})
+
+
+@login_required
+def add_note(request):
+    if request.method == 'POST':
+        form = NoteForm(request.POST)
+        if form.is_valid():
+            note = form.save(commit=False)
+            note.user = request.user
+            note.save()
+            return redirect('list_notes')
+    else:
+        form = NoteForm()
+    return render(request, 'ocr_app/add_note.html', {'form': form})
+
+@login_required
+def list_notes(request):
+    notes = Note.objects.filter(user=request.user)
+    return render(request, 'ocr_app/list_notes.html', {'notes': notes})
+
+@login_required
+def edit_note(request, note_id):
+    note = get_object_or_404(Note, id=note_id, user=request.user)
+    if request.method == 'POST':
+        form = NoteForm(request.POST, instance=note)
+        if form.is_valid():
+            form.save()
+            return redirect('list_notes')
+    else:
+        form = NoteForm(instance=note)
+    return render(request, 'ocr_app/edit_note.html', {'form': form})
+
+@login_required
+def delete_note(request, note_id):
+    note = get_object_or_404(Note, id=note_id, user=request.user)
+    if request.method == 'POST':
+        note.delete()
+        return redirect('list_notes')
+    return render(request, 'ocr_app/delete_note.html', {'note': note})
+
+
+from django.shortcuts import render, redirect
+from .models import Quiz, Question, Answer, UserScore
+from .forms import QuizForm, QuestionForm, AnswerForm
+
+def list_quizzes(request):
+    quizzes = Quiz.objects.all()
+    return render(request, 'ocr_app/list_quizzes.html', {'quizzes': quizzes})
+
+def take_quiz(request, quiz_id):
+    quiz = Quiz.objects.get(id=quiz_id)
+    questions = quiz.questions.all()
+    if request.method == 'POST':
+        score = 0
+        for question in questions:
+            selected_answer = request.POST.get(f'question_{question.id}')
+            if selected_answer:
+                answer = Answer.objects.get(id=selected_answer)
+                if answer.is_correct:
+                    score += 1
+        UserScore.objects.create(user=request.user, quiz=quiz, score=score)
+        return redirect('quiz_results', quiz_id=quiz.id)
+    return render(request, 'ocr_app/take_quiz.html', {'quiz': quiz, 'questions': questions})
+
+def quiz_results(request, quiz_id):
+    quiz = Quiz.objects.get(id=quiz_id)
+    user_score = UserScore.objects.filter(user=request.user, quiz=quiz).first()
+    return render(request, 'ocr_app/quiz_results.html', {'quiz': quiz, 'user_score': user_score})
+
+def view_plant_3d(request):
+    return render(request,'ocr_app/view_plant_3d.html')
+
+
+
+import requests
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.conf import settings
+
+# Function to call the ChatGPT API
+def call_chatgpt_api(prompt):
+    api_key = settings.OPENAI_API_KEY
+    headers = {
+        'Authorization': f'Bearer {api_key}',
+        'Content-Type': 'application/json',
+    }
+    data = {
+        'model': 'gpt-3.5-turbo',  # Or another GPT model
+        'messages': [
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt},
+        ],
+        'temperature': 0.7,
+    }
+    response = requests.post('https://api.openai.com/v1/chat/completions', json=data, headers=headers)
+    print(response.json())  # Print the entire response for debugging
+    return response.json()
+
+
+# A Django view to send input to ChatGPT
+def chatgpt_view(request):
+    if request.method == 'POST':
+        user_input = request.POST.get('user_input')
+        try:
+            response_data = call_chatgpt_api(user_input)
+            print("Processed Response Data:", response_data)  # Debugging output
+            if response_data.get('choices'):
+                choices = response_data['choices']
+                if choices:
+                    gpt_reply = choices[0].get('message', {}).get('content', 'No content found')
+                else:
+                    gpt_reply = 'No choices found in response'
+            else:
+                gpt_reply = 'API response does not contain choices'
+        except requests.exceptions.RequestException as e:
+            gpt_reply = "Request failed: " + str(e)
+        except Exception as e:
+            gpt_reply = "Error occurred: " + str(e)
+        return JsonResponse({'response': gpt_reply})
+    return render(request, 'ocr_app/chat.html')

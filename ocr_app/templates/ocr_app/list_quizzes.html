@@ -1,0 +1,90 @@
+{% extends 'ocr_app/base.html' %}
+
+{% block extra_head %}
+<style>
+/* Container for the quiz list */
+.quiz-list-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #f5f9f5;
+    border-radius: 10px;
+    border: 1px solid #d4e2d4;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header for the quiz page */
+.quiz-header {
+    font-size: 32px;
+    font-weight: bold;
+    color: #2c7f32; /* Ayush herbal theme green */
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Styling for the quiz list */
+.quiz-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Each individual quiz item */
+.quiz-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #e9f5e9;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #d1e4d1;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect on each quiz item */
+.quiz-item:hover {
+    background-color: #c7e9c7;
+}
+
+/* Link styling for each quiz */
+.quiz-link {
+    text-decoration: none;
+    color: #2c7f32;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* Hover effect on quiz link */
+.quiz-link:hover {
+    color: #1e5c21;
+}
+
+/* Displaying the quiz level */
+.quiz-level {
+    font-size: 16px;
+    color: #666;
+    background-color: #f0fff0;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #d0e6d0;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="quiz-list-container">
+    <h1 class="quiz-header">Available Quizzes</h1>
+    <ul class="quiz-list">
+        {% for quiz in quizzes %}
+        <li class="quiz-item">
+            <a href="{% url 'take_quiz' quiz.id %}" class="quiz-link">
+                {{ quiz.title }}
+            </a>
+            <span class="quiz-level">Level: {{ quiz.get_level_display }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

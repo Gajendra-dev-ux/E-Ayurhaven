@@ -1,0 +1,215 @@
+{% extends 'ocr_app/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% load custom_tags %}
+
+{% block content %}
+    <div class='court-img-background'>
+        <div class='court-img-background-div'>
+            <h1 class='court-img-background-h1'>High Court of Madhya Pradesh, Jabalpur, Madhya Pradesh </h1>
+            <p class='court-img-background-p'>The High Court of Madhya Pradesh, Jabalpur, offers a comprehensive digital library that provides convenient access to a wealth of legal resources. This digital repository includes a complete collection of rules and acts, allowing legal professionals, researchers, and the general public to view and consult essential legal documents online. By digitizing these vital resources, the High Court enhances transparency and accessibility, ensuring that important legal information is readily available at the fingertips of those who need it. This initiative reflects a commitment to modernizing legal processes and promoting efficient, informed engagement with the law.</p>
+        </div>
+    </div>
+
+    <div class='home-page-buttons'>
+        <h2 class="text-behind-search-home headings">Acts/Rules List
+        {% if user.is_authenticated %}
+        <span class="headings button-62" style="font-size: 16px; "><a href="{% url 'profile' %}" style="color: black;">YOUR BOOKS<i class="fa-solid fa-chevron-right"></i></a></span>
+        {% endif %}
+        </h2>
+        <div class='page-buttons'>
+            <form class="search-book" method="get" action="{% url 'index' %}">
+                <input type="text" name="title_q" placeholder="Search by title..." value="{{ request.GET.title_q }}">
+                <button class="btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="toggable-box" id="toggableBox" style='{% if content_query %} display: block; {% else %} display: none; {% endif %}'>
+        <div id="contentResults">
+
+            <!-- {% load custom_tags %} -->
+            {% if content_query %}
+            <h2 class="headings">Results for "{{ content_query }}"</h2>
+            {% if not results %}
+                <p class="headings">No results found.</p>
+            {% else %}
+                <ul>
+                    <div class="content_results">
+                        {% if content_results %}
+                            <strong class="headings match">TEXT MATCH RESULTS</strong><br>
+                            <div class="search-content">
+                                {% for result in content_results %}
+                                    {% check_and_set_last_title result.heading.chapter.book.title as should_display_title %}
+                                    {% if should_display_title %}
+                                        <li>
+                                            <strong class="headings">
+                                                <a href="{% url 'view_book' result.heading.chapter.book.id %}?q={{content_query}}" target="_blank">
+                                                    {{ result.heading.chapter.book.title }}
+                                                </a>
+                                            </strong> 
+                                        </li>
+                                    {% endif %}
+                                    {% check_and_set_last_chapter result.heading.chapter.name as should_display_chapter %}
+                                    {% if should_display_chapter %}
+                                    <li>
+                                        <strong class="headings cr">CHAPTER:{{ result.heading.chapter.name }}</strong> <br>
+                                    </li>
+                                    {% endif %}
+                                    <li>
+                                        <strong class="headings hr">HEADING:{{ result.heading.name }}</strong> 
+                                    </li>
+                                    <hr class="ul-ruler">
+                                {% endfor %}
+                            </div>
+                            <hr class="ul-ruler">
+                        {% endif %}
+                    </div>
+                    <div class="heading_results">
+                        {% if heading_results %}
+                            <strong class="headings match">HEADING MATCH RESULTS</strong><br>
+                            <div class="search-content">
+                                {% for result in heading_results %}
+                                    {% check_and_set_last_title result.chapter.book.title as should_display_title %}
+                                    {% if should_display_title %}
+                                        <li>
+                                            <strong class="headings">
+                                                <a href="{% url 'view_book' result.chapter.book.id %}?q={{content_query}}" target="_blank">
+                                                    {{ result.chapter.book.title }}
+                                                </a>
+                                            </strong> 
+                                        </li>
+                                    {% endif %}
+                                    {% check_and_set_last_chapter result.chapter.name as should_display_chapter %}
+                                    {% if should_display_chapter %}
+                                    <li>
+                                        <strong class="headings cr">CHAPTER:{{ result.chapter.name }}</strong> 
+                                    </li>
+                                    <hr class="ul-ruler">
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <hr class="ul-ruler">
+                        {% endif %}
+                    </div>
+                    <div class="chapter_results">
+                        {% if chapter_results %}
+                            <strong class="headings match">CHAPTER MATCH IN</strong><br>
+                            <div class="search-content">
+                                {% for result in chapter_results %}
+                                    {% check_and_set_last_title result.chapter.book.title as should_display_title %}
+                                    {% if should_display_title %}
+                                        <li>
+                                            <strong class="headings">
+                                                <a href="{% url 'view_book' result.book.id %}?q={{content_query}}" target="_blank">
+                                                    {{ result.book.title }}
+                                                </a>
+                                            </strong> 
+                                        </li>  
+                                        <hr class="ul-ruler">
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <hr class="ul-ruler">
+                        {% endif %}
+                    </div>
+                    <div class="book_results">
+                        {% if book_results %}
+                            <strong class="headings match">BOOK MATCH RESULTS</strong><br>
+                            <div class="search-content">
+                                {% for result in book_results %}
+                                    <li>
+                                        <a href="{% url 'view_book' result.id %}" target="_blank" class="headings">
+                                            {{ result.title }}
+                                        </a>
+                                    </li>
+                                    <hr class="ul-ruler">
+                                {% endfor %}
+                            </div>
+                            <hr class="ul-ruler">
+                        {% endif %}
+                    </div>
+                </ul>
+            {% endif %}
+        {% endif %}
+        
+
+        </div>
+    </div>
+
+
+    {% if title_query %}
+    <div>
+        <h2>Results for "{{ title_query }}"</h2>
+        {% if not books %}
+            <p>No results found.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+
+    <div>
+        <ul class='book-list-grid'>
+            {% for book in books %}
+                <div class="book book-home">
+                    {% if book.cover %}
+                        <a href="{% url 'view_book' book.id %}" class="book-btn btn-view-home">
+                            <div class='book-cover-container'>
+                                <img src="{{ book.cover.url }}" alt="{{ book.title }}: Book Cover" title='{{ book.title }}'>
+                            </div>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'view_book' book.id %}" class="book-btn btn-view-home">
+                            <div class='book-cover-container'>
+                                <!-- <i class="fa-solid fa-book-skull"></i> -->
+                                <p class='cover-not-found'> Cover Not Found! <i class="fa-solid fa-ban" style="font-size: large;"></i></p>
+                                <div class="book-home-data">
+                                    <h3>{{ book.title }}</h3>
+                                    <p><strong>Author:</strong> {{ book.author }}</p>
+                                    <p>Added by: {{ book.added_by.username }}</p>
+                                </div> 
+                            </div> 
+                        </a> 
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script>
+        function adjustBoxHeight() {
+            var headerHeight = document.querySelector('header').offsetHeight;
+            var footerHeight = document.querySelector('footer').offsetHeight;
+            var box = document.getElementById('toggableBox');
+    
+            // Set the height of the box based on header and footer heights
+            box.style.height = `calc(100vh - ${headerHeight + footerHeight}px)`;
+        }
+    
+        function toggleBox() {
+            var box = document.getElementById('toggableBox');
+            var btn = document.getElementById('toggleBtn');
+            if (box.style.display === 'none' || box.style.display === '') {
+                box.style.display = 'block';
+            } else {
+                box.style.display = 'none';
+            }
+        }
+    
+        // Adjust the box height on page load and resize
+        window.addEventListener('load', adjustBoxHeight);
+        window.addEventListener('resize', adjustBoxHeight);
+    
+        document.addEventListener('click', function(event) {
+            var box = document.getElementById('toggableBox');
+            var btn = document.getElementById('toggleBtn');
+            var isClickInsideBox = box.contains(event.target);
+            var isClickInsideBtn = btn.contains(event.target);
+    
+            if (!isClickInsideBox && !isClickInsideBtn) {
+                box.style.display = 'none';
+            }
+        });
+    </script>
+{% endblock %}

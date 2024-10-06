@@ -2,25 +2,65 @@
 
 {% block title %}Home{% endblock %}
 
+{% block extra_head %}
+<style>
+    .three-d-model-container {
+        width: 100%;
+        height: 500px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 700px;
+    }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
+
 {% load custom_tags %}
 
 {% block content %}
     <div class='court-img-background'>
         <div class='court-img-background-div'>
-            <h1 class='court-img-background-h1'>High Court of Madhya Pradesh, Jabalpur, Madhya Pradesh </h1>
-            <p class='court-img-background-p'>The High Court of Madhya Pradesh, Jabalpur, offers a comprehensive digital library that provides convenient access to a wealth of legal resources. This digital repository includes a complete collection of rules and acts, allowing legal professionals, researchers, and the general public to view and consult essential legal documents online. By digitizing these vital resources, the High Court enhances transparency and accessibility, ensuring that important legal information is readily available at the fingertips of those who need it. This initiative reflects a commitment to modernizing legal processes and promoting efficient, informed engagement with the law.</p>
+            <h1 class='court-img-background-h1'>Virtual Herbal Garden: Interactive, educational, and immersive digital platform</h1>
+            <p class='court-img-background-p'>The Virtual Herbal Garden is an innovative, interactive digital platform designed to showcase the diverse range of medicinal plants used in AYUSH (Ayurveda, Yoga & Naturopathy, Unani, Siddha, and Homeopathy) systems. This immersive experience bridges the gap between traditional knowledge and modern technology, making valuable information about medicinal herbs accessible to a wide audience.</p>
         </div>
     </div>
 
     <div class='home-page-buttons'>
-        <h2 class="text-behind-search-home headings">Acts/Rules List
+        <h2 class="text-behind-search-home headings">Virtual Herbal Garden
         {% if user.is_authenticated %}
-        <span class="headings button-62" style="font-size: 16px; "><a href="{% url 'profile' %}" style="color: black;">YOUR BOOKS<i class="fa-solid fa-chevron-right"></i></a></span>
+        <span class="headings button-62" style="font-size: 16px; "><a href="{% url 'profile' %}" style="color: black;">YOUR FAVOURITE PLANTS<i class="fa-solid fa-chevron-right"></i></a></span>
+        <span class="headings button-62" style="font-size: 16px; "><a href="{% url 'list_quizzes' %}" style="color: black;">Quiz </a><i style="color: black;" class="fa-solid fa-gamepad"></i></span>
+        <span class="headings button-62" style="font-size: 16px; "><a href="{% url 'list_notes' %}" style="color: black;">Notes </a><i style="color: black;" class="fa-solid fa-note-sticky"></i></span>
+        <!-- <span class="headings button-62" style="font-size: 16px; "><a href="{% url 'view_plant_3d' %}" style="color: black;">View_plant_3d </a><i style="color: black;" class="fa-solid fa-note-sticky"></i></span> -->
         {% endif %}
         </h2>
         <div class='page-buttons'>
             <form class="search-book" method="get" action="{% url 'home' %}">
-                <input type="text" name="title_q" placeholder="Search by title..." value="{{ request.GET.title_q }}">
+                <input type="text" name="title_q" placeholder="Search by plant name..." value="{{ request.GET.title_q }}">
                 <button class="btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
             </form>
         </div>
@@ -154,39 +194,205 @@
             {% for book in books %}
                 <div class="book book-home">
                     {% if book.cover %}
-                        <a href="{% url 'view_book' book.id %}" class="book-btn btn-view-home">
+                        <a href="{% if book.model_3d %}#model3DModal{{ forloop.counter }}{% elif book.video %}#videoModal{{ forloop.counter }}{% else %}{% url 'view_book' book.id %}{% endif %}" 
+                           class="book-btn btn-view-home" 
+                           {% if book.model_3d or book.video %}data-toggle="modal"{% endif %}
+                           {% if book.model_3d %}onclick="open3DModelModal({{ forloop.counter }}, '{{ book.model_3d.url }}')"{% endif %}>
                             <div class='book-cover-container'>
                                 <img src="{{ book.cover.url }}" alt="{{ book.title }}: Book Cover" title='{{ book.title }}'>
                             </div>
                         </a>
                     {% else %}
-                        <a href="{% url 'view_book' book.id %}" class="book-btn btn-view-home">
+                        <a href="{% if book.model_3d %}#model3DModal{{ forloop.counter }}{% elif book.video %}#videoModal{{ forloop.counter }}{% else %}{% url 'view_book' book.id %}{% endif %}" 
+                           class="book-btn btn-view-home" 
+                           {% if book.model_3d or book.video %}data-toggle="modal"{% endif %}>
                             <div class='book-cover-container'>
-                                <!-- <i class="fa-solid fa-book-skull"></i> -->
                                 <p class='cover-not-found'> Cover Not Found! <i class="fa-solid fa-ban" style="font-size: large;"></i></p>
-                                <div class="book-home-data">
-                                    <h3>{{ book.title }}</h3>
-                                    <p><strong>Author:</strong> {{ book.author }}</p>
-                                    <p>Added by: {{ book.added_by.username }}</p>
-                                </div> 
-                            </div> 
-                        </a> 
+                            </div>
+                        </a>
+                    {% endif %}
+        
+                    <div class="book-home-data">
+                        <h3>{{ book.title }}</h3>
+                        <p><strong>Author:</strong> {{ book.author }}</p>
+                        <p>Added by: {{ book.added_by.username }}</p>
+                    </div>
+        
+                    {% if user.is_authenticated %}
+                        <form action="{% url 'bookmark_book' book.id %}" method="post" class="bookmark-form">
+                            {% csrf_token %}
+                            <button type="submit" class="bookmark-icon">
+                                {% if book.is_bookmarked %}
+                                    <i class="fas fa-bookmark bookmarked"></i>
+                                {% else %}
+                                    <i class="far fa-bookmark"></i>
+                                {% endif %}
+                            </button>
+                        </form>
                     {% endif %}
                 </div>
+        
+                <!-- Modal for 3D model -->
+                {% if book.model_3d %}
+                    <div id="model3DModal{{ forloop.counter }}" class="modal">
+                        <div class="modal-content">
+                            <span class="close" onclick="closeModal({{ forloop.counter }}, '3d')">&times;</span>
+                            <div id="3d-model-container{{ forloop.counter }}" class="three-d-model-container"></div>
+                            <a href="{% url 'view_book' book.id %}" class="btn btn-primary">View Plant Profile</a>
+                        </div>
+                    </div>
+                {% endif %}
+        
+                <!-- Modal for video -->
+                {% if book.video %}
+                    <div id="videoModal{{ forloop.counter }}" class="modal" style="display: none;">
+                        <div class="modal-content">
+                            <span class="close" onclick="closeModal({{ forloop.counter }}, 'video')">&times;</span>
+                            <video class="vd" controls>
+                                <source src="{{ book.video.url }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <br/>
+                            <a href="{% url 'view_book' book.id %}" class="btn btn-primary">View Plant Profile</a>
+                        </div>
+                    </div>
+                {% endif %}
             {% endfor %}
         </ul>
+        
     </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
     <script>
+        let currentScene, currentCamera, currentRenderer, currentControls;
+    
+        function closeModal(counter, type) {
+            const modal = document.getElementById(type === '3d' ? "model3DModal" + counter : "videoModal" + counter);
+            modal.style.display = "none";
+            
+            if (type === '3d') {
+                cleanupScene();
+            }
+        }
+        
+        function cleanupScene() {
+            if (currentScene) {
+                // Remove all objects from the scene
+                while(currentScene.children.length > 0){ 
+                    currentScene.remove(currentScene.children[0]); 
+                }
+            }
+            if (currentRenderer) {
+                currentRenderer.dispose();
+                currentRenderer.forceContextLoss();
+                currentRenderer.domElement.remove();
+            }
+            if (currentControls) {
+                currentControls.dispose();
+            }
+            currentScene = null;
+            currentCamera = null;
+            currentRenderer = null;
+            currentControls = null;
+        }
+        
+        function load3DModel(modelPath, containerId) {
+            cleanupScene(); // Clean up any existing scene
+    
+            const container = document.getElementById(containerId);
+            currentScene = new THREE.Scene();
+            currentCamera = new THREE.PerspectiveCamera(75, container.offsetWidth / container.offsetHeight, 0.1, 1000);
+            currentRenderer = new THREE.WebGLRenderer({ antialias: true });
+            
+            currentRenderer.setSize(container.offsetWidth, container.offsetHeight);
+            container.appendChild(currentRenderer.domElement);
+            
+            const loader = new THREE.GLTFLoader();
+            loader.load(modelPath, 
+                function(gltf) {
+                    currentScene.add(gltf.scene);
+                    
+                    // Center the model
+                    const box = new THREE.Box3().setFromObject(gltf.scene);
+                    const center = box.getCenter(new THREE.Vector3());
+                    gltf.scene.position.sub(center);
+                    
+                    // Adjust camera position
+                    const size = box.getSize(new THREE.Vector3());
+                    const maxDim = Math.max(size.x, size.y, size.z);
+                    const fov = currentCamera.fov * (Math.PI / 180);
+                    let cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+                    currentCamera.position.z = cameraZ * 1.5; // Adjust multiplier as needed
+                    
+                    currentControls = new THREE.OrbitControls(currentCamera, currentRenderer.domElement);
+                    currentControls.enableDamping = true;
+                    currentControls.dampingFactor = 0.25;
+                    currentControls.screenSpacePanning = false;
+                    currentControls.maxPolarAngle = Math.PI / 2;
+                    
+                    function animate() {
+                        if (currentRenderer) {
+                            requestAnimationFrame(animate);
+                            currentControls.update();
+                            currentRenderer.render(currentScene, currentCamera);
+                        }
+                    }
+                    animate();
+                },
+                function(xhr) {
+                    console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+                },
+                function(error) {
+                    console.error('An error occurred while loading the 3D model:', error);
+                }
+            );
+            
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            currentScene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            directionalLight.position.set(0, 1, 0);
+            currentScene.add(directionalLight);
+            
+            // Handle window resize
+            window.addEventListener('resize', onWindowResize, false);
+            function onWindowResize() {
+                if (currentCamera && currentRenderer) {
+                    currentCamera.aspect = container.offsetWidth / container.offsetHeight;
+                    currentCamera.updateProjectionMatrix();
+                    currentRenderer.setSize(container.offsetWidth, container.offsetHeight);
+                }
+            }
+        }
+        
+        function open3DModelModal(counter, modelUrl) {
+            const modal = document.getElementById("model3DModal" + counter);
+            modal.style.display = "block";
+            load3DModel(modelUrl, '3d-model-container' + counter);
+        }
+
+
+        // Function to open the modal
+        document.querySelectorAll('[data-toggle="modal"]').forEach(function(el) {
+            el.addEventListener('click', function(event) {
+                event.preventDefault();
+                var modalId = this.getAttribute('href');
+                document.querySelector(modalId).style.display = 'block';
+            });
+        });
+
+
         function adjustBoxHeight() {
             var headerHeight = document.querySelector('header').offsetHeight;
             var footerHeight = document.querySelector('footer').offsetHeight;
             var box = document.getElementById('toggableBox');
-    
+
             // Set the height of the box based on header and footer heights
             box.style.height = `calc(100vh - ${headerHeight + footerHeight}px)`;
         }
-    
+
         function toggleBox() {
             var box = document.getElementById('toggableBox');
             var btn = document.getElementById('toggleBtn');
@@ -196,17 +402,17 @@
                 box.style.display = 'none';
             }
         }
-    
+
         // Adjust the box height on page load and resize
         window.addEventListener('load', adjustBoxHeight);
         window.addEventListener('resize', adjustBoxHeight);
-    
+
         document.addEventListener('click', function(event) {
             var box = document.getElementById('toggableBox');
             var btn = document.getElementById('toggleBtn');
             var isClickInsideBox = box.contains(event.target);
             var isClickInsideBtn = btn.contains(event.target);
-    
+
             if (!isClickInsideBox && !isClickInsideBtn) {
                 box.style.display = 'none';
             }

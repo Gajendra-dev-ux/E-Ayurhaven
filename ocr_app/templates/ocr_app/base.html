@@ -58,7 +58,7 @@
   </head>
   <body>
     <header>
-      <h1><i class="fa-solid fa-book-open-reader"></i>Digital Library</h1>
+      <h1><i class="fa-solid fa-book-open-reader"></i>Herbal Garden</h1>
       <form class="search-book" method="get" action="{% url 'home' %}">
         <input type="text" name="content_q" placeholder="Search..." value="{{ request.GET.content_q }}">
         <button class="toggle-btn btn-icn" id="toggleBtn" onclick="toggleBox()" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
@@ -66,7 +66,8 @@
       <nav>
         <li class="headings"><a href="{% url 'home' %}"><i class="fa-solid fa-house-user"></i>Home</a></li>
         {% if user.is_authenticated %}
-        <li class="headings"><a href="{% url 'add_book' %}"><i class="fa-solid fa-circle-plus"></i>Book</a></li>
+        <li class="headings"><a href="{% url 'add_book' %}"><i class="fa-solid fa-circle-plus"></i>New Species</a></li>
+        <!-- <li class="headings"><a href="{% url 'list_notes' %}"><i class="fa-solid fa-note-sticky"></i>NOTES</a></li> -->
         {% else %}
         <li class="headings"><a href="{% url 'login' %}"><i class="fa-solid fa-arrow-right-to-bracket"></i>Login</a></li>
         <li class="headings"><a href="{% url 'signup' %}"><i class="fa-solid fa-user-plus"></i>Signup</a></li>
@@ -98,31 +99,7 @@
     </div>
 
     <footer>
-      <!-- <div class="footer__redes">
-        <ul class="footer__redes-wrapper">
-          <li>
-            <a href="#" class="footer__link">
-              <i class="fab fa-facebook-f"></i>
-            </a>
-          </li>
-          <li>
-            <a href="#" class="footer__link">
-              <i class="fab fa-twitter"></i>
-            </a>
-          </li>
-          <li>
-            <a href="#" class="footer__link">
-              <i class="fab fa-instagram"></i>
-            </a>
-          </li>
-          <li>
-            <a href="#" class="footer__link">
-              <i class="fab fa-youtube"></i>
-            </a>
-          </li>
-        </ul>
-      </div> -->
-      <p>&copy; 2024 High Court of Madhya Pradesh. All rights reserved.</p>
+      <p>&copy; Copyright Ministry of Ayush. All Rights Reserved.</p>
     </footer>
     
     

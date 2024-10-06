@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .validators import validate_username
-from .models import Book, Chapter , Heading , Content , Profile 
+from .models import Book, Chapter , Heading , Content , Profile , Note
 from .models import Content
 # from ckeditor.widgets import CKEditorWidget
 
@@ -17,7 +17,7 @@ class SignUpForm(UserCreationForm):
 class BookForm(forms.ModelForm):
     class Meta:
         model = Book
-        fields = ['title', 'author', 'cover']
+        fields = ['title', 'author', 'cover', 'video', 'model_3d']
 
 
 class EditProfileForm(forms.ModelForm):
@@ -55,3 +55,27 @@ class ContentForm(forms.ModelForm):
         widgets = {
             'text': forms.Textarea(attrs={'class': 'tinymce'}),
         }
+
+
+class NoteForm(forms.ModelForm):
+    class Meta:
+        model = Note
+        fields = ['title', 'content']
+
+
+from .models import Quiz, Question, Answer
+
+class QuizForm(forms.ModelForm):
+    class Meta:
+        model = Quiz
+        fields = ['title', 'level', 'description']
+
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        fields = ['question_text', 'image']
+
+class AnswerForm(forms.ModelForm):
+    class Meta:
+        model = Answer
+        fields = ['answer_text', 'is_correct']

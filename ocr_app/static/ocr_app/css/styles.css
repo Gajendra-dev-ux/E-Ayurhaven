@@ -12,6 +12,9 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-image: url('images/OIP.jpeg');
+    background-size: cover;
+    background-attachment: fixed;
 }
 
 a{
@@ -21,7 +24,7 @@ a{
 
 header {
     position: fixed;
-    background-color: white;
+    /* background-color: #8ef7a3b0; */
     top: 0px;
     width: 100%;
     color: white;
@@ -32,6 +35,14 @@ header {
     border-bottom: 1px solid black;
     justify-content: space-around;
     z-index: 10;
+    background-image: url('images/OIP.jpeg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    /* background-image: url('images/OIP.jpeg');
+    /* background-size: cover;
+    background-attachment: fixed; */ */
+    /* padding: 20px; */
 }
 
 header nav {
@@ -47,7 +58,7 @@ header nav li{
 }
 
 header nav a {
-    color: red;
+    color: white;
     /* border-radius: 5px; */
     text-decoration: none;
     padding: 9px 10px;
@@ -130,10 +141,11 @@ header h1 i{
 }
 
 .content {
-    padding: 55px 150px;
+    padding: 70px 120px;
     text-align: center;
-    margin: 45px 0 100px 0;
+    margin: 0;
 }
+
 
 .content>p{
     float: left;
@@ -167,15 +179,22 @@ header h1 i{
 }
 
 footer {
-    background-color: #333;
-    color: white;
+    /* background-color: #333; */
+    color: black;
     text-align: center;
     padding: 1em 0;
     width: 100%;
-    position: fixed;
+    position:fixed;
     bottom: 0;
     left: 0;
     z-index: 10;
+    background-image: url('images/OIP.jpeg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    /* padding: 20px; */
+    /* text-align: center; */
+    /* color: white; */
 }
 
 
@@ -184,10 +203,11 @@ footer {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-image: url('images/High Court of MP Img Back.jpg');
+    background-image: url('images/bg.jpg');
     background-size: cover;
     background-position: top center;
     background-repeat: no-repeat;
+    margin-top: 50px;
 }
 
 .court-img-background-div{
@@ -338,7 +358,7 @@ btn
     /* border: 1px solid #373030; */
     padding: 15px;
     margin-bottom: 10px;
-    background-color: #f5f4fd;
+    background: linear-gradient(45deg, #8aff7c, transparent);
 }
 
 .book h3 {
@@ -361,7 +381,7 @@ btn
 
 .book-select {
     border: none;
-    background-color: #f4f4f4;
+    background-color: #97ff84;
     height: 30px;
     margin: 10px 0;
     border-radius: 15px;
@@ -493,7 +513,7 @@ nav a img {
     float: left;
     margin: auto;
     padding: 20px;
-    background: #ffffff;
+    background: #cbffd7;
     border-radius: 10px;
     box-shadow: 0 8px 8px rgba(0.1, 0.1, 0.2, 0.3);
     margin-bottom: 40px;
@@ -582,6 +602,8 @@ nav a img {
     margin: 16px 0;
     border: 2px solid lightgray;
     padding: 10px;
+    background: #bcffce;
+    border-radius: 40px;
 }
 
 .buttons{
@@ -826,7 +848,7 @@ nav a img {
     align-items: center;
     justify-content: center;
     padding: 20px;
-    background-color: #f4f4f4;
+    background-color: #c3ff95;
     border-radius: 10px;
     flex-direction: column;
     top: 72px;
@@ -985,6 +1007,7 @@ nav a img {
 
 .writebook-text-button{
     display: flex;
+    margin-top: 60px;
 }
 .writebook-button{
     display: flex;
@@ -1024,6 +1047,102 @@ nav a img {
   box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(0, 0, 0, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);
 }
 
+.vd{
+    height: 500px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 60px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.bookmark-form {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.bookmark-icon i {
+    font-size: 1.5em;
+    color: #ffc107; /* Default color for non-bookmarked */
+}
+
+.bookmarked {
+    color: #007bff; /* Color for bookmarked items */
+}
+/* Note Styles */
+.note-container {
+    margin-bottom: 20px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.note-title {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.note-content {
+    font-size: 1em;
+    line-height: 1.6;
+}
+
+/* Note Action Buttons */
+.note-action-buttons {
+    margin-top: 10px;
+}
+
+.note-action-buttons a, .note-action-buttons button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.note-action-buttons .btn-edit {
+    background-color: #28a745;
+}
+
+.note-action-buttons .btn-delete {
+    background-color: #dc3545;
+}
 
 @media (max-width: 938px) {
     header nav a {

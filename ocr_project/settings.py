@@ -118,9 +118,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-# 'ckeditor' Upload Path
-
-CKEDITOR_UPLOAD_PATH = "uploads/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -150,7 +147,4 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
-# settings.py
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
-
+OPENAI_API_KEY = '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'

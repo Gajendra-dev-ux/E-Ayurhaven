@@ -2,35 +2,47 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    text-decoration: none;
     cursor: default;
+    transition: all 0.4s linear;
 }
-
+.django-ckeditor-widget html{
+    padding: 15px;
+}
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-image: url('images/OIP.jpeg');
+    background-size: cover;
+    background-attachment: fixed;
 }
 
-header h1 {
-    font-size: 30px;
-    color: #ff0000;
-    font-family: 'Work Sans';
+a{
+    text-decoration: none;
+    
 }
-
 
 header {
     position: fixed;
-    background-color: white;
+    /* background-color: #8ef7a3b0; */
     top: 0px;
     width: 100%;
     color: white;
-    padding: 1em;
+    padding: 1em ;
     text-align: center;
     display: flex;
     align-items: center;
     border-bottom: 1px solid black;
     justify-content: space-around;
+    z-index: 10;
+    background-image: url('images/OIP.jpeg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    /* background-image: url('images/OIP.jpeg');
+    /* background-size: cover;
+    background-attachment: fixed; */ */
+    /* padding: 20px; */
 }
 
 header nav {
@@ -40,30 +52,51 @@ header nav {
     align-items: center;
 }
 
-header nav a {
-    color: black;
-    border-radius: 5px;
-    text-decoration: none;
-    padding: 9px 20px;
-}
-
-header nav a:hover {
-    background-color: rgb(220, 41, 41);
-}
-
-header nav li {
+header nav li{
     list-style: none;
+    margin:  0px 5px;
 }
 
+header nav a {
+    color: white;
+    /* border-radius: 5px; */
+    text-decoration: none;
+    padding: 9px 10px;
+    cursor: pointer;
+}
+
+header nav li:hover{
+    border-bottom: 3px solid red;
+}
+
+header nav li:active{
+    transform: scale(1.2);
+}
+
+
+header h1 {
+    font-size: 30px;
+    color: #ff0000;
+    font-family: 'Work Sans';
+}
+
+
+.headings{
+    font-family: math;
+}
+.flex{
+    display: flex;
+    justify-content: space-between;
+    margin: 0 35px;
+}
 
 .btn {
     background-color: #007bff;
     color: white;
     border: none;
-    padding: 10px 15px;
+    padding: 10px 20px;
     cursor: pointer;
-    margin: 0 15px;
-    border-radius: 2px;
+    border-radius: 5px;
 }
 
 .btn:hover {
@@ -87,8 +120,13 @@ header nav li a i {
     padding-right: 5px;
 }
 
+header h1 i{
+    margin: 0 20px;
+}
+
 .theme {
     height: 40px;
+    margin: 0 10px;
     width: 40px;
     border-radius: 50%;
     display: flex;
@@ -103,9 +141,15 @@ header nav li a i {
 }
 
 .content {
-    padding: 20px;
+    padding: 70px 120px;
     text-align: center;
-    margin: 64px 0 100px 0;
+    margin: 0;
+}
+
+
+.content>p{
+    float: left;
+    color: red;
 }
 
 .content ul li {
@@ -135,20 +179,78 @@ header nav li a i {
 }
 
 footer {
-    background-color: #333;
-    color: white;
+    /* background-color: #333; */
+    color: black;
     text-align: center;
     padding: 1em 0;
     width: 100%;
-    position: fixed;
+    position:fixed;
     bottom: 0;
     left: 0;
+    z-index: 10;
+    background-image: url('images/OIP.jpeg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    /* padding: 20px; */
+    /* text-align: center; */
+    /* color: white; */
+}
+
+
+.court-img-background {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-image: url('images/bg.jpg');
+    background-size: cover;
+    background-position: top center;
+    background-repeat: no-repeat;
+    margin-top: 50px;
+}
+
+.court-img-background-div{
+    background-color: rgba(0, 0, 0, 0.494);
+    margin: 8vw 0;
+}
+
+.home-page-buttons {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.page-buttons {
+    display: flex;
+}
+
+.page-buttons .btn{
+    margin: 0 4px;
+}
+
+.toggle-btn {
+    
+    padding: 5px 20px;
+    border-radius: 5px;
+    border: rgb(199, 199, 199) 1px solid;
+    cursor: pointer;
+    background: linear-gradient(135deg, red, transparent);
+}
+.toggle-btn:hover{
+    background:linear-gradient(red,rgb(255, 255, 255));
+}
+
+.court-img-background-h1, .court-img-background-p {
+    color: white;
+    padding: 3px;
 }
 
 .bodyform {
-    max-width: 500px;
-    margin: 20px auto;
-    padding: 2em;
+    margin: 3px auto;
+    padding: 3px;
     background: #6f6f6f;
     border-radius: 5px;
 }
@@ -177,20 +279,70 @@ footer {
     max-width: 90vw;
     width: 90vw;
 }
+.toggable-box {
+    position: fixed;
+    top: 73px;
+    left: 0;
+    z-index: 9;
+    width: 60vh;
+    height: 100%;
+    background-color: #e0efff;
+    overflow-y: auto;
+    border-right: 1px solid #ccc;
+    padding: 10px;
+    display: none;
+    transition: all 0.5s linear;
+}
+
+.toggable-box ul{
+    text-align: left;
+    border: 3px solid #9898d4;
+    border-radius: 30px;
+    padding: 20px;
+    background: linear-gradient(45deg, #c1ddff, transparent);
+}
+
+#contentResults{
+    padding: 15px;
+}
+
+#contentResults h2{
+    font-family: 'Work Sans';
+    margin: 16px;
+    color: cornflowerblue;
+}
+#contentResults li{
+    padding: 5px;
+}
+#contentResults a{
+    font-family: emoji;
+    color: rgb(255 0 0);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 18px;
+}
+#contentResults a:hover{
+    text-decoration: underline;
+}
+.ul-ruler {
+    background-color: #222222;
+    height: 1px;
+}
 
 .bookform textarea {
     width: 100%;
     aspect-ratio: 1 / 1.41428571;
     resize: none;
 }
-
+btn
 .bodyform p {
     display: flex;
     flex-direction: column;
 }
 
 .contentform {
-    max-width: 95%;
+    max-width: 75%;
+    position: fixed;
 }
 
 .contentform textarea {
@@ -198,7 +350,7 @@ footer {
 }
 
 .contentform .btn {
-    margin-top: 15px;
+    margin: 7px;
 }
 
 .book {
@@ -206,7 +358,7 @@ footer {
     /* border: 1px solid #373030; */
     padding: 15px;
     margin-bottom: 10px;
-    background-color: #f5f4fd;
+    background: linear-gradient(45deg, #8aff7c, transparent);
 }
 
 .book h3 {
@@ -215,8 +367,11 @@ footer {
 
 .book-list-grid {
     display: grid;
-    grid-template-columns: 18.8% 18.8% 18.8% 18.8% 18.8%;
-    gap: 1em;
+    grid-template-columns: 18% 18% 18% 18% 18%;
+    gap: 20px;
+    list-style-type: none;
+    padding: 0;
+    margin-top: 20px;
 }
 
 .book-level {
@@ -226,21 +381,43 @@ footer {
 
 .book-select {
     border: none;
-    background-color: lightblue;
+    background-color: #97ff84;
     height: 30px;
-    margin-bottom: 10px;
+    margin: 10px 0;
+    border-radius: 15px;
+    width: 100%;
+    padding: 5px;
 }
 
 .book-home {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-direction: column;
-    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+.book-home-profile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.book-home-profile a {
+    color: black;
 }
 
 .book-home:hover {
-    background-color: #adb0ff;
+    background-color: #d9dbf7;
+    transform: scale(1.05);
+}
+.book-home:hover .book-home-data {
+    background-color: #d9dbf7;
 }
 
 .book-home a {
@@ -248,14 +425,16 @@ footer {
 }
 
 .book-cover-container {
-    cursor: pointer;
+    position: relative;
+    overflow: hidden;
 }
 
 .book-cover-container img {
-    width: 80%;
     aspect-ratio: 1 / 1.414;
     object-fit: cover;
     cursor: pointer;
+    width: 90%;
+    height: 80%;
 }
 
 .book-cover-container i {
@@ -264,27 +443,27 @@ footer {
 }
 
 .book-cover-container .cover-not-found {
+    color: #666;
+    text-align: center;
+    margin-top: 10px;
     color: red;
-    cursor: pointer;
 }
 
 .book-home-data {
-    text-align: left;
-    padding-top: 20px;
-    cursor: pointer;
+    padding: 5px;
+    background-color: #f5f4fd;
 }
 
 .book-home-data h3,
 .book-home-data p {
     cursor: pointer;
+    margin: 0 0 5px;
+    font-size: 16px;
 }
 
 .book .btn {
-    background-color: #007bff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 3px;
-    margin: 3px 0;
+    text-decoration: none;
+    color: inherit;
 }
 
 .book button a {
@@ -316,18 +495,38 @@ nav a img {
 .btn-edit-profile:hover {
     background-color: rgb(255, 187, 61);
 }
+.btn-icn{
+    margin-right:5px;
+}
+
+.btn-icn i {
+    margin-right: 3px;
+}
 
 .display-profile {
     position: fixed;
     top: 90px;
-    float: left;
-    width: 34%;
-    height: 75vh;
+    height: 65vh;
     border: 2px solid white;
+    width: 25%;
     text-align: center;
-    background: #6f6f6f;
+    float: left;
+    margin: auto;
+    padding: 20px;
+    background: #cbffd7;
     border-radius: 10px;
+    box-shadow: 0 8px 8px rgba(0.1, 0.1, 0.2, 0.3);
+    margin-bottom: 40px;
 }
+.display-dashboard {
+    float: right;
+    width: 63.3%;
+    margin: 20px 0 200px 0;
+    padding: 0 7px;
+    border-left: 1px solid;
+    border-right: 1px solid;
+}
+
 
 .display-profile h1 {
     color: #101010;
@@ -336,19 +535,14 @@ nav a img {
 
 .display-profile p {
     margin: 3px auto;
-    padding: 3px 0;
+    padding: 3px 5px;
     width: 90%;
     border: 1px solid rgb(200, 200, 200);
+    font-size: 1.1em;
+    color: #555;
 }
 
-.display-dashboard {
-    float: right;
-    width: 63.3%;
-    margin: 20px 0 60px 0;
-    padding: 0 7px;
-    border-left: 1px solid;
-    border-right: 1px solid;
-}
+
 
 .display-dashboard h1 {
     color: #101010;
@@ -358,28 +552,37 @@ nav a img {
     background-color: green;
     margin: 10px 0;
     width: 100%;
+    font-size: 1em;
+    margin: 20px auto;
+
 }
 
 .btn-createnew:hover {
-    background-color: rgb(0, 255, 0);
+    background-color:#218838;
 }
 
 .display-dashboard ul {
     list-style: none;
+    margin: 0 25px;
 }
 
 .profile-image {
-    height: 100px;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    margin-bottom: 20px;
 }
 
 
 .btn-profile-action {
     margin: 10px 0;
     width: 44.5%;
+    font-size: 1em;
 }
 
 .content form .django-ckeditor-widget {
-    width: 100%;
+    width: 95%;
 }
 
 .view-book {
@@ -387,7 +590,9 @@ nav a img {
 }
 
 #scroll-button {
-    padding: 10px 100px;
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 5px;
 }
 
 .chapter {
@@ -397,6 +602,20 @@ nav a img {
     margin: 16px 0;
     border: 2px solid lightgray;
     padding: 10px;
+    background: #bcffce;
+    border-radius: 40px;
+}
+
+.buttons{
+    display: none;
+}
+
+.chapter-container:hover .buttons{
+    display: block;
+}
+
+.chapter-container:hover{
+    background: linear-gradient(rgb(196, 221, 255),white);
 }
 
 .view-side-bar {
@@ -430,6 +649,20 @@ nav a img {
     color: #333;
     text-decoration: underline;
 }
+.chapter span{
+    margin: 4px 0;
+    padding: 1px 5px;
+}
+/* .text{
+    padding:5px 10px;
+}
+.text p {
+    margin: 0; 
+}
+
+.text br {
+    display: none; 
+} */
 
 .chapter-container .text {
     max-width: 70%;
@@ -461,7 +694,7 @@ nav a img {
 
 .chapter p {
     font-size: 14px;
-    margin: 5px 0
+    margin: 6px 0;
 }
 
 .chapter .btn {
@@ -471,30 +704,36 @@ nav a img {
 
 .chapter .btn-blue {
     background-color: #3d3dff;
+    position: sticky;
+    top: 80px;
 }
 
 .chapter .btn-green {
     background-color: green;
+    position: sticky;
+    top: 80px;
 }
 
 .chapter .btn-red {
     background-color: red;
+    position: sticky;
+    top: 80px;
 }
 
 .text-content {
     font-size: 16px;
     padding: 2px 0;
-    font-style: italic;
+    font-style: normal;
     font-weight: normal;
 }
 
+.text-content .chapter-container{
+    align-items: normal;
+}
 .heading {
     padding: 6px 0;
 }
 
-/* .heading1 .view-content {
-    margin-left: 45px;
-} */
 
 .heading1 .text-content {
     margin-left: 45px;
@@ -523,30 +762,85 @@ nav a img {
 .search-form .search-input {
     margin: 0px;
     padding: 8px;
+    cursor: auto;
 }
 
 .text-behind-search {
     display: block;
     float: left;
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #333;
 }
 
 .search-book {
     display: block;
     float: right;
+    display: flex;
+    justify-content: center;
+    /* margin-bottom: 20px; */
 }
 
 .search-book input {
-    padding: 8px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 300px;
+    margin-right: 10px;
+    cursor: auto;
 }
+
+
 
 .search-book .btn i {
     margin-right: 5px;
 }
 
+/* .search-list{
+    display: block;
+} */
+
+.search-content{
+    display: none;
+}
+
+.content_results .search-content{
+    display: block;
+}
+
+.heading_results:hover .search-content{
+    display: block;
+}
+
+.chapter_results:hover .search-content{
+    display: block;
+}
+
+.book_results:hover .search-content{
+    display: block;
+}
+
+.br{
+    color:rgb(255, 194, 194)
+}
+
+.cr{
+    color: rgb(34, 0, 255);
+}
+
+.hr{
+    color: rgb(0, 0, 255);
+}
+
+.match{
+    font-size: larger;
+    text-decoration: underline;
+}
+
 .ruler {
     width: 100%;
     visibility: hidden;
-    margin: 13px 0;
+    margin: 20px 0;
 }
 
 .drop-down {
@@ -554,7 +848,7 @@ nav a img {
     align-items: center;
     justify-content: center;
     padding: 20px;
-    background-color: lightgrey;
+    background-color: #c3ff95;
     border-radius: 10px;
     flex-direction: column;
     top: 72px;
@@ -571,12 +865,17 @@ nav a img {
 .drop-down-input {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    width: 100%;
 }
 
 .drop-down-input select {
     margin: 3px;
     border: none;
-    width: 135px;
+    border-radius: 10px;
+    height: 30px;
+    width: 100%;
+    padding: 5px;
 }
 
 .download-btn {
@@ -633,7 +932,7 @@ nav a img {
     width: 150px;
     z-index: 99;
     border: none;
-    background-color: #555;
+    background: linear-gradient(45deg, red, transparent);
     color: white;
     padding: 15px;
     border-radius: 40px;
@@ -647,12 +946,12 @@ nav a img {
 #dropdown-container {
     display: none;
     position: fixed;
-    bottom: 80px;
+    width: 250px;
     right: 30px;
     bottom: 125px;
+    background:linear-gradient(135deg, #b6b6ff, rgb(255 187 187)) ;
     color: black;
     z-index: 100;
-    background-color: white;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 10px;
@@ -660,18 +959,189 @@ nav a img {
 }
 
 .dropdown select {
-    width: 50%;
+    width: 100%;
+    border-radius: 10px;
 }
 
 .dropdown {
     margin-bottom: 10px;
+    display: flex;
 }
 
 .chapter-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #f5f4fd;
+    /* background-color: #f5f4fd; */
+}
+
+.three_dot {
+    color: rgb(212, 40, 40);
+    cursor: pointer;
+}
+
+.three_dot_content {
+    position: absolute;
+    display: none;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    margin-left: 18px;
+    min-width: 160px;
+}
+
+.three_dot_content a {
+    color: black;
+    text-decoration: none;
+    display: block;
+    
+}
+.three_dot_content a:hover {
+    background-color: #f1f1f1;
+}
+
+.three_dot:hover {
+    color: #333;
+}
+
+.writebook-text-button{
+    display: flex;
+    margin-top: 60px;
+}
+.writebook-button{
+    display: flex;
+    min-width: 375px;
+    align-items: center;
+    justify-content: end;
+}
+/* CSS */
+.button-62 {
+  background: linear-gradient(to bottom right, #babcf4, #ffffff);
+  border: 0;
+  height: 40px;
+  border-radius: 8px;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: inline-block;
+  font-family: -apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size: 14px;
+  font-weight: 475;
+  line-height: 2.5;
+  outline: transparent;
+  padding: 0 1rem;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow .1s ease-in-out;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+
+.button-62:not([disabled]):focus {
+  box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(0, 0, 0, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);
+}
+
+.button-62:not([disabled]):hover {
+  box-shadow: 0 0 .25rem rgba(0, 0, 0, 0.5), -.125rem -.125rem 1rem rgba(0, 0, 0, 0.5), .125rem .125rem 1rem rgba(255, 154, 90, 0.5);
+}
+
+.vd{
+    height: 500px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 60px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.bookmark-form {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.bookmark-icon i {
+    font-size: 1.5em;
+    color: #ffc107; /* Default color for non-bookmarked */
+}
+
+.bookmarked {
+    color: #007bff; /* Color for bookmarked items */
+}
+/* Note Styles */
+.note-container {
+    margin-bottom: 20px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.note-title {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.note-content {
+    font-size: 1em;
+    line-height: 1.6;
+}
+
+/* Note Action Buttons */
+.note-action-buttons {
+    margin-top: 10px;
+}
+
+.note-action-buttons a, .note-action-buttons button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.note-action-buttons .btn-edit {
+    background-color: #28a745;
+}
+
+.note-action-buttons .btn-delete {
+    background-color: #dc3545;
 }
 
 @media (max-width: 938px) {
@@ -682,4 +1152,4 @@ nav a img {
     header nav .btn {
         margin: 0 10px;
     }
-}
+} 

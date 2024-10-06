@@ -1,0 +1,103 @@
+{% extends 'ocr_app/base.html' %}
+
+{% load static %}
+
+{% block extra_head %}
+<style>
+    #3d-model-container {
+        width: 100%;
+        height: 500px;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <h1>Calathea Plant</h1>
+    <div id="3d-model-container"></div>
+
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://unpkg.com/three@0.157.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.157.0/examples/jsm/"
+          }
+        }
+        </script>
+    </head>
+    <body>
+        <div id="3d-model-container"></div>
+    
+        <script type="module">
+            import * as THREE from 'three';
+            import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+            import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    
+            // Create the scene and camera
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+    
+            // Create the renderer
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('3d-model-container').appendChild(renderer.domElement);
+    
+            // Add OrbitControls
+            const controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableZoom = true;
+            controls.enableRotate = true;
+    
+            // Add ambient light
+            const light = new THREE.AmbientLight(0xffffff, 0.5); // Soft white light
+            scene.add(light);
+    
+            // Add directional light
+            const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+            dirLight.position.set(5, 10, 7.5);
+            scene.add(dirLight);
+    
+            // Load 3D model using GLTFLoader
+            const loader = new GLTFLoader();
+            loader.load('models/calathea-plant.glb', function(gltf) {
+                scene.add(gltf.scene);
+                
+                // Center the model
+                const box = new THREE.Box3().setFromObject(gltf.scene);
+                const center = box.getCenter(new THREE.Vector3());
+                gltf.scene.position.sub(center);
+                
+                // Adjust camera to fit the model
+                const size = box.getSize(new THREE.Vector3());
+                const maxDim = Math.max(size.x, size.y, size.z);
+                const fov = camera.fov * (Math.PI / 180);
+                let cameraZ = Math.abs(maxDim / 2 * Math.tan(fov * 2));
+                camera.position.z = cameraZ * 1.5;
+                
+                // Update the controls
+                controls.maxDistance = cameraZ * 10;
+                controls.target.copy(new THREE.Vector3());
+                controls.update();
+                
+                animate();
+            }, undefined, function (error) {
+                console.error('Error loading the model:', error);
+            });
+    
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                controls.update();
+                renderer.render(scene, camera);
+            }
+    
+            // Handle window resize
+            window.addEventListener('resize', onWindowResize, false);
+            function onWindowResize() {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        </script>
+{% endblock %}

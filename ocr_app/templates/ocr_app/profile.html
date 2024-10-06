@@ -26,14 +26,14 @@
 
     <a href="{% url 'edit_profile' %}"><button class="btn btn-profile-action btn-edit-profile">Edit Profile</button></a>
 </div>
-
+<!-- 
 <div class="display-dashboard">
-    <h1 class="text-behind-search headings">Your Acts/Rules</h1>
+    <h1 class="text-behind-search headings">My Bookmark</h1>
     <form class="search-book" method="get" action="{% url 'profile' %}">
         <input type="text" name="q" placeholder="Search by title...">
         <button class="btn btn-icn" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
     </form>
-    <a href="{% url 'add_book' %}"><button class="btn btn-createnew">Add New Act/Rule</button></a>
+    <a href="{% url 'add_book' %}"><button class="btn btn-createnew">Add New plant</button></a>
     <div>
         <ul>
             {% for book in books %}
@@ -42,7 +42,6 @@
                     <a href="{% url 'view_book' book.id %}">
                         <h3>{{ book.title }}</h3>
                     </a> 
-                    <!-- <i class="fa-solid fa-arrow-trend-down three_dot" title="View More" data-book-id="{{ book.id }}"></i> -->
                     <i class="fa-solid fa-circle-arrow-right three_dot" title="View More" data-book-id="{{ book.id }}"></i>
                 </div>
                 <div class="three_dot_content" id="three_dot_content_{{ book.id }}" style="display: none;">
@@ -62,8 +61,82 @@
             {% endfor %}
         </ul>
     </div>
+</div> -->
+
+<div class="display-dashboard">
+    <h1 class="text-behind-search headings">Bookmarked Plants</h1>
+    <form class="search-book" method="get" action="{% url 'profile' %}">
+        <input type="text" name="q" placeholder="Search by title...">
+        <button class="btn btn-icn" type="submit"><i class="fa-solid fa-magnifying-glass"></i>Search</button>
+    </form>
+    <a href=""><button class="btn btn-createnew">Your favourite plant</button></a>
+
+    <div>
+        <ul class='book-list-grid'>
+            {% for bookmark in bookmarks %}
+                <div class="book book-home">
+                    {% if bookmark.book.cover %}
+                        <a href="{% if bookmark.book.video %}#videoModal{{ forloop.counter }}{% else %}{% url 'view_book' bookmark.book.id %}{% endif %}" 
+                            class="book-btn btn-view-home" 
+                            {% if book.video %}data-toggle="modal"{% endif %}>
+                            <div class='book-cover-container'>
+                                <img src="{{ bookmark.book.cover.url }}" alt="{{ bookmark.book.title }}: Book Cover" title='{{ bookmark.book.title }}'>
+                            </div>
+                        </a>
+                    {% else %}
+                        <a href="{% if bookmark.book.video %}#videoModal{{ forloop.counter }}{% else %}{% url 'view_book' bookmark.book.id %}{% endif %}" 
+                            class="book-btn btn-view-home" 
+                            {% if book.video %}data-toggle="modal"{% endif %}>
+                            <div class='book-cover-container'>
+                                <p class='cover-not-found'> Cover Not Found! <i class="fa-solid fa-ban" style="font-size: large;"></i></p>
+                            </div>
+                        </a>
+                        <div class="book-home-data">
+                            <h3>{{ bookmark.book.title }}</h3>
+                            <p><strong>Author:</strong> {{ bookmark.book.author }}</p>
+                            <p>Added by: {{ bookmark.book.added_by.username }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                
+                {% if bookmark.book.video %}
+                    <div id="videoModal{{ forloop.counter }}" class="modal" style="display: none;">
+                        <div class="modal-content">
+                            <span class="close" onclick="closeModal({{ forloop.counter }})">&times;</span>
+                            <video class="vd" controls>
+                                <source src="{{ bookmark.book.video.url }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <br/>
+                            <a href="{% url 'view_book' bookmark.book.id %}" class="btn btn-primary">View Plant Profile</a>
+                        </div>
+                    </div>
+                {% endif %}
+
+            {% empty %}
+                <li>You have no bookmarks.</li>
+            {% endfor %}
+        </ul>
+    </div>
 </div>
+
 <script>
+
+    // Function to open the modal
+    document.querySelectorAll('[data-toggle="modal"]').forEach(function(el) {
+        el.addEventListener('click', function(event) {
+            event.preventDefault();
+            var modalId = this.getAttribute('href');
+            document.querySelector(modalId).style.display = 'block';
+        });
+    });
+
+    // Function to close the modal
+    function closeModal(modalNumber) {
+        document.getElementById('videoModal' + modalNumber).style.display = 'none';
+    }
+
     // Toggle visibility of threeDotContent for each book
     const threeDots = document.querySelectorAll('.three_dot');
     let openDropdown = null;

@@ -1,0 +1,13 @@
+
+{% extends 'ocr_app/base.html' %}
+
+{% block title %}Add Heading{% endblock %}
+
+{% block content %}
+    <h1>Are you sure you want to delete "{{ note.title }}"?</h1>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Yes, delete</button>
+    </form>
+    <a href="{% url 'list_notes' %}">Cancel</a>
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends 'ocr_app/base.html' %}
+
+{% block extra_head %}
+<style>
+    /* Main container for the quiz */
+.quiz-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #f0f8f0;
+    border-radius: 12px;
+    border: 1px solid #c5dec5;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Title of the quiz */
+.quiz-title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #2b7a2b;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* Styling for each question container */
+.quiz-question-container {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #e8f4e8;
+    border-radius: 10px;
+    border: 1px solid #c9e3c9;
+}
+
+/* Styling for question text */
+.quiz-question-text {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2b7a2b;
+}
+
+/* Styling for question images */
+.quiz-question-image {
+    max-width: 100%;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: 1px solid #d0e5d0;
+}
+
+/* Container for the answers */
+.quiz-answers {
+    margin-top: 15px;
+}
+
+/* Styling for each answer option */
+.quiz-answer {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+/* Input radio button */
+.quiz-answer input[type="radio"] {
+    margin-right: 10px;
+}
+
+/* Answer text next to the radio button */
+.quiz-answer-text {
+    font-size: 18px;
+    color: #3a573a;
+    cursor: pointer;
+}
+
+/* Submit button styling */
+.quiz-submit-btn {
+    display: block;
+    margin: 20px auto;
+    padding: 12px 25px;
+    background-color: #2b7a2b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for submit button */
+.quiz-submit-btn:hover {
+    background-color: #245c24;
+}
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="quiz-container">
+    <h1 class="quiz-title">{{ quiz.title }}</h1>
+    <form method="post" class="quiz-form">
+        {% csrf_token %}
+        {% for question in questions %}
+        <div class="quiz-question-container">
+            <p class="quiz-question-text">{{ question.question_text }}</p>
+            {% if question.image %}
+                <img src="{{ question.image.url }}" alt="Question Image" class="quiz-question-image">
+            {% endif %}
+            <div class="quiz-answers">
+                {% for answer in question.answers.all %}
+                <div class="quiz-answer">
+                    <input type="radio" name="question_{{ question.id }}" value="{{ answer.id }}" id="answer_{{ answer.id }}">
+                    <label for="answer_{{ answer.id }}" class="quiz-answer-text">{{ answer.answer_text }}</label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+        <button type="submit" class="quiz-submit-btn">Submit</button>
+    </form>
+</div>
+{% endblock %}

@@ -128,140 +128,140 @@
 {% endblock %}
 
 {% block content %}
-<div class="view-side-bar">
-    <h1>{{ book.title }}</h1>
-    <!-- Dropdown to select and navigate to another book -->
-    <select id="book-select" class='book-select'>
-        <option value="">--Select another book--</option>
-        {% for b in books %}
-            <option value="{% url 'view_book' b.id %}">{{ b.title }}</option>
-        {% endfor %}
-    </select>
-    <hr>
-    <!-- Search form -->
-    <form class="bodyform search-form" method="get" action="{% url 'view_book' book.id %}">
-        <input class="search-input" type="text" name="q" placeholder="Search in book..." value="{{ query|default_if_none:'' }}">
-        <button class="btn" type="submit">Search</button>
-    </form>
+    <div class="view-side-bar">
+        <h1>{{ book.title }}</h1>
+        <!-- Dropdown to select and navigate to another book -->
+        <select id="book-select" class='book-select'>
+            <option value="">--Select another book--</option>
+            {% for b in books %}
+                <option value="{% url 'view_book' b.id %}">{{ b.title }}</option>
+            {% endfor %}
+        </select>
+        <hr>
+        <!-- Search form -->
+        <form class="bodyform search-form" method="get" action="{% url 'view_book' book.id %}">
+            <input class="search-input" type="text" name="q" placeholder="Search in book..." value="{{ query|default_if_none:'' }}">
+            <button class="btn" type="submit">Search</button>
+        </form>
 
-    <!-- Display search results if query is present -->
-    {% if query %}
-        <div>
-            <p class="occurrence">occurrence : {{ occurrences }} time(s)</p>
-        </div>
-    {% endif %}
-
-    <!-- Dropdowns for navigation -->
-    <div class="drop-down">
-            <div class="drop-down-input">
-                <!-- Chapter dropdown -->
-                <select id="chapter-dropdown">
-                    <option value="">Select Chapter</option>
-                    {% for chapter_heading in chapters_with_headings %}
-                        <option value="chapter-{{ chapter_heading.chapter.id }}">{{ chapter_heading.chapter.name }}</option>
-                    {% endfor %}
-                </select>
-
-                <!-- Heading 1 dropdown -->
-                <select id="heading1-dropdown">
-                    <option value="">Select Heading 1</option>
-                </select>
-
-                <!-- Heading 2 dropdown -->
-                <select id="heading2-dropdown">
-                    <option value="">Select Heading 2</option>
-                </select>
-
-                <!-- Heading 3 dropdown -->
-                <select id="heading3-dropdown">
-                    <option value="">Select Heading 3</option>
-                </select>
-
-                <!-- Heading 4 dropdown -->
-                <select id="heading4-dropdown">
-                    <option value="">Select Heading 4</option>
-                </select>
+        <!-- Display search results if query is present -->
+        {% if query %}
+            <div>
+                <p class="occurrence">occurrence : {{ occurrences }} time(s)</p>
             </div>
-        <button id="scroll-button" class="btn" title='Visit'>Search</button>
+        {% endif %}
+
+        <!-- Dropdowns for navigation -->
+        <div class="drop-down">
+                <div class="drop-down-input">
+                    <!-- Chapter dropdown -->
+                    <select id="chapter-dropdown">
+                        <option value="">Select Chapter</option>
+                        {% for chapter_heading in chapters_with_headings %}
+                            <option value="chapter-{{ chapter_heading.chapter.id }}">{{ chapter_heading.chapter.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <!-- Heading 1 dropdown -->
+                    <select id="heading1-dropdown">
+                        <option value="">Select Heading 1</option>
+                    </select>
+
+                    <!-- Heading 2 dropdown -->
+                    <select id="heading2-dropdown">
+                        <option value="">Select Heading 2</option>
+                    </select>
+
+                    <!-- Heading 3 dropdown -->
+                    <select id="heading3-dropdown">
+                        <option value="">Select Heading 3</option>
+                    </select>
+
+                    <!-- Heading 4 dropdown -->
+                    <select id="heading4-dropdown">
+                        <option value="">Select Heading 4</option>
+                    </select>
+                </div>
+            <button id="scroll-button" class="btn" title='Visit'>Search</button>
+        </div>
+
+        <a href="{% url 'download_book_pdf' book.id %}">
+            <button class="btn download-btn"><i class="fa-solid fa-download"></i>Print Plant Details as PDF</button>
+        </a>
     </div>
 
-    <a href="{% url 'download_book_pdf' book.id %}">
-        <button class="btn download-btn"><i class="fa-solid fa-download"></i>Download Book as PDF</button>
-    </a>
-</div>
-
-<div class='view-book-bar'>
-    <!-- Navigation using dropdowns -->
-    <ul>
-        {% for chapter_heading in chapters_with_headings %}
-            <li id="chapter-{{ chapter_heading.chapter.id }}" class="chapter" data-name="{{ chapter_heading.chapter.name }}">
-                <span>{{ chapter_heading.chapter.name|highlight:query|safe }}</span>
-                <ul>
-                    <!-- Heading 1 -->
-                    {% for heading1 in chapter_heading.heading1 %}
-                        <li id="heading1-{{ heading1.id }}" class="heading heading1" data-parent="chapter-{{ chapter_heading.chapter.id }}" data-name="{{ heading1.name }}">
-                            <h1>{{ heading1.name|highlight:query|safe }}</h1>
-                            <ul>
-                                <!-- Content under Heading 1 -->
-                                {% for content in heading1.contents.all %}
-                                    <li class='text-content text'>
-                                        <p>{{ content.text|highlight:query|safe }}</p>
-                                    </li>
-                                {% endfor %}
-                                <!-- Heading 2 -->
-                                {% for heading2 in chapter_heading.heading2 %}
-                                    {% if heading2.parent_id == heading1.id %}
-                                        <li id="heading2-{{ heading2.id }}" class="heading heading2" data-parent="heading1-{{ heading1.id }}" data-name="{{ heading2.name }}">
-                                            <h2>{{ heading2.name|highlight:query|safe }}</h2>
-                                            <ul>
-                                                <!-- Content under Heading 2 -->
-                                                {% for content in heading2.contents.all %}
-                                                    <li class='text-content text'>
-                                                        <p>{{ content.text|highlight:query|safe }}</p>
-                                                    </li>
-                                                {% endfor %}
-                                                <!-- Heading 3 -->
-                                                {% for heading3 in chapter_heading.heading3 %}
-                                                    {% if heading3.parent_id == heading2.id %}
-                                                        <li id="heading3-{{ heading3.id }}" class="heading heading3" data-parent="heading2-{{ heading2.id }}" data-name="{{ heading3.name }}">
-                                                            <h3>{{ heading3.name|highlight:query|safe }}</h3>
-                                                            <ul>
-                                                                <!-- Content under Heading 3 -->
-                                                                {% for content in heading3.contents.all %}
-                                                                    <li class='text-content text'>
-                                                                        <p>{{ content.text|highlight:query|safe }}</p>
-                                                                    </li>
-                                                                {% endfor %}
-                                                                <!-- Heading 4 -->
-                                                                {% for heading4 in chapter_heading.heading4 %}
-                                                                    {% if heading4.parent_id == heading3.id %}
-                                                                        <li id="heading4-{{ heading4.id }}" class="heading heading4" data-parent="heading3-{{ heading3.id }}" data-name="{{ heading4.name }}">
-                                                                            <h4>{{ heading4.name|highlight:query|safe }}</h4>
-                                                                            <ul>
-                                                                                <!-- Content under Heading 4 -->
-                                                                                {% for content in heading4.contents.all %}
-                                                                                    <li class='text-content text'>
-                                                                                        <p>{{ content.text|highlight:query|safe }}</p>
-                                                                                    </li>
-                                                                                {% endfor %}
-                                                                            </ul>
-                                                                        </li>
-                                                                    {% endif %}
-                                                                {% endfor %}
-                                                            </ul>
-                                                        </li>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </ul>
+    <div class='view-book-bar'>
+        <!-- Navigation using dropdowns -->
+        <ul>
+            {% for chapter_heading in chapters_with_headings %}
+                <li id="chapter-{{ chapter_heading.chapter.id }}" class="chapter" data-name="{{ chapter_heading.chapter.name }}">
+                    <span>{{ chapter_heading.chapter.name|highlight:query|safe }}</span>
+                    <ul>
+                        <!-- Heading 1 -->
+                        {% for heading1 in chapter_heading.heading1 %}
+                            <li id="heading1-{{ heading1.id }}" class="heading heading1" data-parent="chapter-{{ chapter_heading.chapter.id }}" data-name="{{ heading1.name }}">
+                                <h1>{{ heading1.name|highlight:query|safe }}</h1>
+                                <ul>
+                                    <!-- Content under Heading 1 -->
+                                    {% for content in heading1.contents.all %}
+                                        <li class='text-content text'>
+                                            <p>{{ content.text|highlight:query|safe }}</p>
                                         </li>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </li>
-        {% endfor %}
-    </ul>
-    {% endblock %}
-</div>
+                                    {% endfor %}
+                                    <!-- Heading 2 -->
+                                    {% for heading2 in chapter_heading.heading2 %}
+                                        {% if heading2.parent_id == heading1.id %}
+                                            <li id="heading2-{{ heading2.id }}" class="heading heading2" data-parent="heading1-{{ heading1.id }}" data-name="{{ heading2.name }}">
+                                                <h2>{{ heading2.name|highlight:query|safe }}</h2>
+                                                <ul>
+                                                    <!-- Content under Heading 2 -->
+                                                    {% for content in heading2.contents.all %}
+                                                        <li class='text-content text'>
+                                                            <p>{{ content.text|highlight:query|safe }}</p>
+                                                        </li>
+                                                    {% endfor %}
+                                                    <!-- Heading 3 -->
+                                                    {% for heading3 in chapter_heading.heading3 %}
+                                                        {% if heading3.parent_id == heading2.id %}
+                                                            <li id="heading3-{{ heading3.id }}" class="heading heading3" data-parent="heading2-{{ heading2.id }}" data-name="{{ heading3.name }}">
+                                                                <h3>{{ heading3.name|highlight:query|safe }}</h3>
+                                                                <ul>
+                                                                    <!-- Content under Heading 3 -->
+                                                                    {% for content in heading3.contents.all %}
+                                                                        <li class='text-content text'>
+                                                                            <p>{{ content.text|highlight:query|safe }}</p>
+                                                                        </li>
+                                                                    {% endfor %}
+                                                                    <!-- Heading 4 -->
+                                                                    {% for heading4 in chapter_heading.heading4 %}
+                                                                        {% if heading4.parent_id == heading3.id %}
+                                                                            <li id="heading4-{{ heading4.id }}" class="heading heading4" data-parent="heading3-{{ heading3.id }}" data-name="{{ heading4.name }}">
+                                                                                <h4>{{ heading4.name|highlight:query|safe }}</h4>
+                                                                                <ul>
+                                                                                    <!-- Content under Heading 4 -->
+                                                                                    {% for content in heading4.contents.all %}
+                                                                                        <li class='text-content text'>
+                                                                                            <p>{{ content.text|highlight:query|safe }}</p>
+                                                                                        </li>
+                                                                                    {% endfor %}
+                                                                                </ul>
+                                                                            </li>
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                </ul>
+                                                            </li>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
